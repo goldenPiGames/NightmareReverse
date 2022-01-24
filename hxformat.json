@@ -1,0 +1,35 @@
+{
+	"lineEnds": {
+		"leftCurly": "both",
+		"rightCurly": "both",
+		"objectLiteralCurly": {
+			"leftCurly": "after"
+		}
+	},
+	"sameLine": {
+		"ifElse": "same",
+		"doWhile": "same",
+		"tryBody": "same",
+		"tryCatch": "same",
+		"functionBody": "same",
+		"anonFunctionBody": "same",
+		"caseBody": "same",
+		"catchBody": "same",
+		"comprehensionFor": "same",
+		"doWhileBody": "same",
+		"elseBody": "same",
+		"elseIf": "same",
+		"expressionCase": "same",
+		"expressionIf": "same",
+		"expressionIfWithBlocks": false,
+		"expressionTry": "same",
+		"forBody": "same",
+		"ifBody": "same",
+		"returnBody": "same",
+		"returnBodySingleLine": "same",
+		"untypedBody": "same",
+		"whileBody": "same"
+	},
+	"disableFormatting": true
+}
+

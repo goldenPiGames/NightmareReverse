@@ -1,0 +1,24 @@
+{
+	"title" : "Prairie5",
+	"author" : "PeriTune",
+	"sides" : [
+		{
+			"varname" : "",
+			"file" : "PeriTune_Prairie5.ogg"
+		}
+	],
+	"links" : [
+		{
+			"name" : "PeriTune.com",
+			"href" : "http://peritune.com/prairie5/"
+		},
+		{
+			"name" : "YouTube",
+			"href" : "https://youtu.be/XerGSyUXCUc"
+		},
+		{
+			"name" : "SoundCloud",
+			"href" : "https://soundcloud.com/sei_peridot/prairie5"
+		}
+	]
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<button id="play_test" label="test" width="80" height="20">
+		<anchor x="50%" />
+		<param type="string" value="playlevel" />
+		<param type="string" value="test" />
+	</button>
+	<button id="play_testsmall" label="testsmall" width="80" height="20">
+		<anchor x="50%" />
+		<param type="string" value="playlevel" />
+		<param type="string" value="testsmall" />
+	</button>
+
+	<align axis="vertical">
+		<objects value="play_test,play_testsmall"/>
+		<bounds top="30%" bottom="70%"/>
+	</align>
+</data>

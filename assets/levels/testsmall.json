@@ -1,0 +1,53 @@
+{
+  "ogmoVersion": "3.4.0",
+  "width": 200,
+  "height": 200,
+  "offsetX": 0,
+  "offsetY": 0,
+  "layers": [
+    {
+      "name": "entities",
+      "_eid": "91736097",
+      "offsetX": 0,
+      "offsetY": 0,
+      "gridCellWidth": 10,
+      "gridCellHeight": 10,
+      "gridCellsX": 20,
+      "gridCellsY": 20,
+      "entities": [
+        {"name": "player", "id": 0, "_eid": "91728737", "x": 40, "y": 160, "originX": 8, "originY": 8, "flippedX": false},
+        {
+          "name": "FloatingEyeLarge",
+          "id": 1,
+          "_eid": "16846526",
+          "x": 100,
+          "y": 80,
+          "originX": 16,
+          "originY": 16,
+          "nodes": [
+            {"x": 100, "y": 40},
+            {"x": 160, "y": 40},
+            {"x": 160, "y": 100},
+            {"x": 100, "y": 100}
+          ],
+          "values": {"facing": "up"}
+        },
+        {"name": "Dreamstone", "id": 2, "_eid": "21536586", "x": 40, "y": 40, "originX": 6, "originY": 6}
+      ]
+    },
+    {
+      "name": "tiles",
+      "_eid": "91605546",
+      "offsetX": 0,
+      "offsetY": 0,
+      "gridCellWidth": 20,
+      "gridCellHeight": 20,
+      "gridCellsX": 10,
+      "gridCellsY": 10,
+      "tileset": "TileSample",
+      "data": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0, 1, 1, 1, 1, 1, 2, 2, 1, 1, 0, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 2, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+      "exportMode": 0,
+      "arrayMode": 0
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "name": "DreamLevels",
+  "ogmoVersion": "3.4.0",
+  "levelPaths": ["."],
+  "backgroundColor": "#000000ff",
+  "gridColor": "#8080809d",
+  "anglesRadians": true,
+  "directoryDepth": 5,
+  "layerGridDefaultSize": {"x": 20, "y": 20},
+  "levelDefaultSize": {"x": 320, "y": 240},
+  "levelMinSize": {"x": 128, "y": 128},
+  "levelMaxSize": {"x": 4096, "y": 4096},
+  "levelValues": [],
+  "defaultExportMode": ".json",
+  "compactExport": false,
+  "externalScript": "",
+  "playCommand": "",
+  "entityTags": [],
+  "layers": [
+    {
+      "definition": "entity",
+      "name": "entities",
+      "gridSize": {"x": 10, "y": 10},
+      "exportID": "91736097",
+      "requiredTags": [],
+      "excludedTags": []
+    },
+    {
+      "definition": "tile",
+      "name": "tiles",
+      "gridSize": {"x": 20, "y": 20},
+      "exportID": "91605546",
+      "exportMode": 0,
+      "arrayMode": 0,
+      "defaultTileset": "TileGrey"
+    }
+  ],
+  "entities": [
+    {
+      "exportID": "91728737",
+      "name": "player",
+      "limit": 1,
+      "size": {"x": 16, "y": 16},
+      "origin": {"x": 8, "y": 8},
+      "originAnchored": true,
+      "shape": {
+        "label": "Rectangle",
+        "points": [
+          {"x": -1, "y": -1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": 1}
+        ]
+      },
+      "color": "#cc2244ff",
+      "tileX": false,
+      "tileY": false,
+      "tileSize": {"x": 16, "y": 16},
+      "resizeableX": false,
+      "resizeableY": false,
+      "rotatable": false,
+      "rotationDegrees": 360,
+      "canFlipX": true,
+      "canFlipY": false,
+      "canSetColor": false,
+      "hasNodes": false,
+      "nodeLimit": 0,
+      "nodeDisplay": 0,
+      "nodeGhost": true,
+      "tags": [],
+      "values": []
+    },
+    {
+      "exportID": "21536586",
+      "name": "Dreamstone",
+      "limit": -1,
+      "size": {"x": 12, "y": 12},
+      "origin": {"x": 6, "y": 6},
+      "originAnchored": true,
+      "shape": {
+        "label": "Rectangle",
+        "points": [
+          {"x": -1, "y": -1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": 1}
+        ]
+      },
+      "color": "#e180ffff",
+      "tileX": false,
+      "tileY": false,
+      "tileSize": {"x": 16, "y": 16},
+      "resizeableX": false,
+      "resizeableY": false,
+      "rotatable": false,
+      "rotationDegrees": 360,
+      "canFlipX": false,
+      "canFlipY": false,
+      "canSetColor": false,
+      "hasNodes": false,
+      "nodeLimit": 0,
+      "nodeDisplay": 0,
+      "nodeGhost": true,
+      "tags": [],
+      "values": []
+    },
+    {
+      "exportID": "16846526",
+      "name": "FloatingEyeLarge",
+      "limit": -1,
+      "size": {"x": 32, "y": 32},
+      "origin": {"x": 16, "y": 16},
+      "originAnchored": true,
+      "shape": {
+        "label": "Rectangle",
+        "points": [
+          {"x": -1, "y": -1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": 1}
+        ]
+      },
+      "color": "#442222ff",
+      "tileX": false,
+      "tileY": false,
+      "tileSize": {"x": 16, "y": 16},
+      "resizeableX": false,
+      "resizeableY": false,
+      "rotatable": false,
+      "rotationDegrees": 90,
+      "canFlipX": false,
+      "canFlipY": false,
+      "canSetColor": false,
+      "hasNodes": true,
+      "nodeLimit": 0,
+      "nodeDisplay": 1,
+      "nodeGhost": true,
+      "tags": [],
+      "values": [
+        {
+          "name": "facing",
+          "definition": "Enum",
+          "display": 0,
+          "choices": ["up", "left", "right", "down"],
+          "defaults": 0
+        }
+      ]
+    },
+    {
+      "exportID": "23566956",
+      "name": "FloatingEyeSmall",
+      "limit": -1,
+      "size": {"x": 16, "y": 16},
+      "origin": {"x": 8, "y": 8},
+      "originAnchored": true,
+      "shape": {
+        "label": "Rectangle",
+        "points": [
+          {"x": -1, "y": -1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": 1}
+        ]
+      },
+      "color": "#442222ff",
+      "tileX": false,
+      "tileY": false,
+      "tileSize": {"x": 16, "y": 16},
+      "resizeableX": false,
+      "resizeableY": false,
+      "rotatable": false,
+      "rotationDegrees": 90,
+      "canFlipX": false,
+      "canFlipY": false,
+      "canSetColor": false,
+      "hasNodes": true,
+      "nodeLimit": 0,
+      "nodeDisplay": 1,
+      "nodeGhost": true,
+      "tags": [],
+      "values": []
+    }
+  ],
+  "tilesets": [
+    {"label": "TileGrey", "path": "../images/TileGrey.png", "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAw0lEQVRYR+2X0QnAIAwFdbcM5QgO5W4tkX7YUijGE/rx+lMKRs6LxjQn+DGzg5wyk5P5XA5oZsi0rbUkwBWVMrhiz2NlUAYjBlQHI9bGGBmUwQkDKtQTsl6HyuBvDa6CjfHeUaP/ECmxXfoNsNba4Usp/T37fa0c/Y3ogA4ShXouYovBWVMf43mDkXS+QV5Z2ANIQGoPQgdlT4qJg6I9CB0UPsVEeocbiAckzA230R5AAlJ1UHUw0MmqHwxIu4X8vuU/ASRTbRRGKAHDAAAAAElFTkSuQmCC", "tileWidth": 20, "tileHeight": 20, "tileSeparationX": 0, "tileSeparationY": 0, "tileMarginX": 0, "tileMarginY": 0},
+    {"label": "TileSample", "path": "../images/TileSample.png", "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAA8CAYAAABmdppWAAABN0lEQVRYR+2XCw7DIAiG9WT1Bl7JK3mEnqwLbjSUqmC1WexmsvSBfOMH1M0aYzYzcNg5gCEEA5/SkOzUL0mWHCT7hEAIuSSrRS5w9rbpBaL/fcCc7Ba5pwhbgfzLuoF8EWSBNEoaAV1F/D23nTYHdMg51t4VI6zlcigQc4YSqRJqm2Q/HHgCGOuCG3umzAH0ixfTGNcozkn7IUgGoNZBov6B7wxhka7ktZjDq4XagbR6EFk3kMu7DUibHiNHNblnMYcYqfY6DIhRfwdYyxkv3k9usC4MPlOmAHq/mBjX4u4u2Q9/K5wLm+Qg2R8A5BK7JWuAMAcGFJPe21xRNMB0mJHuwPuHATFXNHe4IA6SaT7QwK+0eXO2S8CmCHnVas+qCLXA/Xz59F8xh9IPSa099aF2smbecOALgJA1H7Z5lv0AAAAASUVORK5CYIIA", "tileWidth": 20, "tileHeight": 20, "tileSeparationX": 0, "tileSeparationY": 0, "tileMarginX": 0, "tileMarginY": 0}
+  ]
+}

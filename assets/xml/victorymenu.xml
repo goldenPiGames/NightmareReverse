@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<button id="return" label="Main Menu" width="80" height="20">
+		<anchor x="50%" />
+		<param type="string" value="returnmain" />
+	</button>
+
+	<align axis="vertical">
+		<objects value="return"/>
+		<bounds top="30%" bottom="70%"/>
+	</align>
+</data>

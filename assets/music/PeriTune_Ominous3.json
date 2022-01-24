@@ -1,0 +1,32 @@
+{
+	"title" : "Ominous 3",
+	"author" : "PeriTune",
+	"sides" : [
+		{
+			"varname" : "Calm",
+			"file" : "PeriTune_Ominous3_Calm.ogg"
+		},
+		{
+			"varname" : "Active",
+			"file" : "PeriTune_Ominous3_Active.ogg"
+		}
+	],
+	"links" : [
+		{
+			"name" : "PeriTune.com",
+			"href" : "http://peritune.com/ominous3/"
+		},
+		{
+			"name" : "YouTube",
+			"href" : "https://youtu.be/ich1VGJSERs"
+		},
+		{
+			"name" : "SoundCloud (Calm)",
+			"href" : "https://soundcloud.com/sei_peridot/ominous3-calm"
+		},
+		{
+			"name" : "SoundCloud (Active)",
+			"href" : "https://soundcloud.com/sei_peridot/ominous3-active"
+		}
+	]
+}

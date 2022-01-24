@@ -1,0 +1,24 @@
+{
+	"title" : "The Hunt",
+	"author" : "vermeen",
+	"sides" : [
+		{
+			"varname" : "Red",
+			"file" : "Vermeen_TheHunt_Red.ogg"
+		},
+		{
+			"varname" : "Blue",
+			"file" : "Vermeen_TheHunt_Blue.ogg"
+		}
+	],
+	"links" : [
+		{
+			"name" : "Newgrounds (Red)",
+			"href" : "https://www.newgrounds.com/audio/listen/1080125"
+		},
+		{
+			"name" : "Newgrounds (Blue)",
+			"href" : "https://www.newgrounds.com/audio/listen/1080126"
+		}
+	]
+}
