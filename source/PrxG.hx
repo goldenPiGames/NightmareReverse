@@ -66,7 +66,9 @@ class PrxMultiSong {
 		var pos:Float = 0;
 		if (FlxG.sound.music != null)
 			pos = FlxG.sound.music.time;
-		FlxG.sound.playMusic("assets/music/"+data.sides[side].file, 1, true);
+		var adjd:Dynamic = data.sides[side].volumeAdjust;
+		var adj:Float = Std.isOfType(adjd, Float) ? cast adjd : 1.0;
+		FlxG.sound.playMusic("assets/music/"+data.sides[side].file, adj, true);
 		FlxG.sound.music.time = pos;
 	}
 }

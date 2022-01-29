@@ -112,6 +112,11 @@ class PrxTilemap extends FlxTilemap {
 		return thing.pathPass.hasType(_fdata[i]);
 	}
 
+	public function canEntityPassCoords(thing:DreamEntity, where:FlxPoint) {
+		//trace(thing.pathPass+" on "+_fdata[i]);
+		return thing.pathPass.hasType(_fdata[getTileIndexByCoords(where)]);
+	}
+
 	/*function canEntityPassIndexRect(thing:DreamEntity, dex:Int, width:Int, height:Int):Bool {
 		for (i in 0...width) {
 			for (j in 0...height) {

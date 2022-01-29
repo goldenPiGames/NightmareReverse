@@ -30,9 +30,9 @@ class FogLayer extends FlxSprite {
 	public function setEye(ent:DreamEntity) {
 		eye = ent;
 		/*FlxG.watch.add(camera, "zoom");
-		FlxG.watch.add(camera, "width");
+		FlxG.watch.add(camera, "width");*/
 		FlxG.watch.add(this, "width");
-		FlxG.watch.add(FlxG, "width");*/
+		FlxG.watch.add(FlxG, "width");
 	}
 
 /*	public override function update(elapsed:Float) {
@@ -69,7 +69,10 @@ class FogLayer extends FlxSprite {
 		var eyemid:FlxPoint = eye.getMidpoint();
 		shaderFog.data.eye.value = [eyemid.x, eyemid.y];
 		shaderFog.data.cam.value = [camera.scroll.x, camera.scroll.y];
-		shaderFog.data.camZoom.value = [camera.zoom];
+		shaderFog.data.camDiv.value = [camera.zoom];
+		//shaderFog.data.camAdd.value = [0, 0];
+		//shaderFog.data.camAdd.value = [160, 120];
+		shaderFog.data.camAdd.value = [(camera.zoom-1)*FlxG.width/camera.zoom/2, (camera.zoom-1)*FlxG.height/camera.zoom/2];
 		super.draw();
 	}
 
@@ -84,7 +87,8 @@ class FogLayerShader extends FlxShader {
 	uniform float width;
 	uniform float height;
 	uniform vec2 cam;
-	uniform float camZoom;
+	uniform float camDiv;
+	uniform vec2 camAdd;
 	uniform float gridSize;
 	uniform int rowSize;
 	uniform int numRows;
@@ -134,7 +138,7 @@ class FogLayerShader extends FlxShader {
 		}
 	}
 	void main() {
-		vec2 worldcoords = vec2(gl_FragCoord.x + cam.x, height - gl_FragCoord.y + cam.y)/camZoom;
+		vec2 worldcoords = vec2(gl_FragCoord.x, height - gl_FragCoord.y) / camDiv + vec2(cam.x, cam.y) + camAdd;
 		if (isVisible(worldcoords)) {
 			gl_FragColor = vec4(0, 0, 0, 0);
 		} else {

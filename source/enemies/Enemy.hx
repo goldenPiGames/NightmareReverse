@@ -36,6 +36,7 @@ class Enemy extends DreamEntity {
 	public static inline var BEH_RETURN = "return";
 	public static inline var BEH_CRASHED = "crashed";
 	public static inline var BEH_LONGING = "longing";
+	public static inline var BEH_CATCHING = "catching";
 	public static inline var BEH_PANIC = "panic";
 	
 	public function new(args:EntityData) {
@@ -50,7 +51,6 @@ class Enemy extends DreamEntity {
 
 	public override function setState(instate:PlayState) {
 		super.setState(instate);
-		instate.enemies.add(this);
 	}
 
 	function behaveUpdate(elapsed:Float) {
@@ -67,6 +67,7 @@ class Enemy extends DreamEntity {
 			case BEH_RETURN: behaveReturn(elapsed);
 			case BEH_LONGING: behaveLonging(elapsed);
 			case BEH_PANIC: behavePanic(elapsed);
+			case BEH_CATCHING: behaveCatching(elapsed);
 			case BEH_CRASHED: behaveCrashed(elapsed);
 			default: behaveOther(elapsed);
 		}
@@ -166,6 +167,10 @@ class Enemy extends DreamEntity {
 	
 	function behavePanic(elapsed) {
 		
+	}
+
+	function behaveCatching(elapsed) {
+
 	}
 
 	function behaveOther(elapsed) {
@@ -347,8 +352,8 @@ class Enemy extends DreamEntity {
 		}
 	}
 
-	public override function playerDied() {
-		super.playerDied();
+	public override function playerDeathReset() {
+		super.playerDeathReset();
 		behaveState = BEH_PATROL;
 		if (startData.nodes != null) {
 			loadPatrolPath();
@@ -362,5 +367,11 @@ class Enemy extends DreamEntity {
 	public override function kill() {
 		super.kill();
 		state.indicateEnemyDied();
+	}
+
+	public function playCatchAnimation(player:DreamPlayer):Float {
+		behaveState = BEH_CATCHING;
+		velocity = new FlxPoint(0, 0);
+		return 2;
 	}
 }

@@ -4,6 +4,7 @@
   "height": 360,
   "offsetX": 0,
   "offsetY": 0,
+  "values": {"tileset": "TileHouse"},
   "layers": [
     {
       "name": "entities",

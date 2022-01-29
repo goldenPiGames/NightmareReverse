@@ -4,7 +4,8 @@
 	"sides" : [
 		{
 			"varname" : "",
-			"file" : "PeriTune_Prairie5.ogg"
+			"file" : "PeriTune_Prairie5.ogg",
+			"volumeAdjust" : 0.3
 		}
 	],
 	"links" : [

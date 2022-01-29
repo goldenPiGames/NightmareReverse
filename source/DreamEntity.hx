@@ -20,6 +20,7 @@ class DreamEntity extends FlxSprite {
 	var spriteDir:SpriteDir;
 	var animName:String;
 	var team:Int;
+	var forceVisible:Bool = false;
 	public var touchPriority:Int = 0;
 
 	public var pathPass:PrxPassFlags;
@@ -47,6 +48,34 @@ class DreamEntity extends FlxSprite {
 		}
 	}
 	
+	public override function update(elapsed:Float) {
+		super.update(elapsed);
+		visible = forceVisible || state.powered || checkVisibility();
+	}
+
+	function checkVisibility():Bool {
+		return checkVisibilityFrom(state.player.getMidpoint());
+	}
+
+	function checkVisibilityFrom(from:FlxPoint) {
+		final numChecks:Int = 3;
+		for (i in 0...numChecks) {
+			if (state.wallmap.ray(from, FlxPoint.weak(x+width*i/numChecks, y))) {
+				return true;
+			}
+			if (state.wallmap.ray(from, FlxPoint.weak(x+width, y+height*i/numChecks))) {
+				return true;
+			}
+			if (state.wallmap.ray(from, FlxPoint.weak(x+width*(numChecks-i)/numChecks, y+height))) {
+				return true;
+			}
+			if (state.wallmap.ray(from, FlxPoint.weak(x, y+height*(numChecks-i)/numChecks))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public function setState(instate:PlayState) {
 		state = instate;
 	}
@@ -146,7 +175,7 @@ class DreamEntity extends FlxSprite {
 		kill();
 	}
 
-	public function playerDied():Void {
+	public function playerDeathReset():Void {
 		if (startData == null) {
 			destroy();
 		} else {

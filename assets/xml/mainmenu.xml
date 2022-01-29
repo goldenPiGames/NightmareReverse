@@ -10,9 +10,14 @@
 		<param type="string" value="playlevel" />
 		<param type="string" value="testsmall" />
 	</button>
+	<button id="play_DeepWoods" label="DeepWoods" width="80" height="20">
+		<anchor x="50%" />
+		<param type="string" value="playlevel" />
+		<param type="string" value="DeepWoods" />
+	</button>
 
 	<align axis="vertical">
-		<objects value="play_test,play_testsmall"/>
+		<objects value="play_test,play_testsmall,play_DeepWoods"/>
 		<bounds top="30%" bottom="70%"/>
 	</align>
 </data>

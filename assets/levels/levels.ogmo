@@ -10,7 +10,15 @@
   "levelDefaultSize": {"x": 320, "y": 240},
   "levelMinSize": {"x": 128, "y": 128},
   "levelMaxSize": {"x": 4096, "y": 4096},
-  "levelValues": [],
+  "levelValues": [
+    {
+      "name": "tileset",
+      "definition": "Enum",
+      "display": 0,
+      "choices": ["TileHouse", "TileDeepWoodsB"],
+      "defaults": 0
+    }
+  ],
   "defaultExportMode": ".json",
   "compactExport": false,
   "externalScript": "",
