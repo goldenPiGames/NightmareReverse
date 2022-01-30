@@ -4,10 +4,12 @@ import DreamPlayer.PlayerDeathSource;
 import enemies.*;
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.FlxSubState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import flixel.graphics.tile.FlxDrawQuadsItem;
 import flixel.group.FlxGroup;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogClickAndDragMouseMotion;
+import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.util.FlxSort;
@@ -15,6 +17,7 @@ import geom.*;
 import geom.FogLayer;
 import haxe.ValueException;
 import hud.DreamHUD;
+import menus.PauseMenu;
 import menus.VictoryMenu;
 import openfl.filters.BlurFilter;
 import openfl.filters.ColorMatrixFilter;
@@ -61,15 +64,14 @@ class PlayState extends FlxState {
 		PrxG.sound.playMusicSide(AssetPaths.Vermeen_TheHunt__json, 0);
 		FlxG.camera.zoom = 2;
 		filterBlur = new BlurFilter();
-		filterBlur.blurX = 2;
-		filterBlur.blurY = 2;
+		setBlur(1);
 		filterColor = new ColorMatrixFilter([
 					-1,  0,  0, 0, 255,
 					 0, -1,  0, 0, 255,
 					 0,  0, -1, 0, 255,
 					 0,  0,  0, 1,   0]);
-		FlxG.camera.setFilters([filterColor]);
-		FlxG.camera.filtersEnabled = false;
+		FlxG.camera.setFilters([filterBlur]);
+		//FlxG.camera.filtersEnabled = false;
 	}
 
 	private function loadLevel() {
@@ -150,6 +152,9 @@ class PlayState extends FlxState {
 		}
 		if (FlxG.keys.justPressed.RBRACKET) {
 			FlxG.camera.filtersEnabled = !FlxG.camera.filtersEnabled;
+		}
+		if (FlxG.keys.anyJustPressed([FlxKey.P, FlxKey.ESCAPE])) {
+			pause();
 		}
 	}
 
@@ -254,23 +259,38 @@ class PlayState extends FlxState {
 		}
 	}
 
-	function resetAfterDeath() {
+	function resetAfterDeath():Void {
 		entities.forEach(e->e.playerDeathReset());
 	}
 
-	public function indicateEnemyDied() {
+	public function indicateEnemyDied():Void {
 		enemyJustDied = true;
 	}
 
-	function youWin() {
+	function youWin():Void {
 		FlxG.switchState(new VictoryMenu());
 	}
 
-	public function playDiegeticSound(source:FlxSoundAsset, location:FlxPoint, volume:Int) {
-		soundIndicators.add(new SoundIndicator(FlxG.sound.play(source), location, volume));
+	public function playDiegeticSound(source:FlxSoundAsset, location:FlxPoint, volume:Int):SoundIndicator {
+		var sonidito = new SoundIndicator(FlxG.sound.play(source), location, volume);
+		soundIndicators.add(sonidito);
+		return sonidito;
 	}
 
-	public function playDiegeticPlayerSound(source:FlxSoundAsset, location:FlxPoint, volume:Int) {
-		playDiegeticSound(source, location, volume);
+	public function playDiegeticPlayerSound(source:FlxSoundAsset, location:FlxPoint, volume:Int):SoundIndicator {
+		return playDiegeticSound(source, location, volume);
+	}
+
+	function setBlur(amount:Float):Void {
+		filterBlur.blurX = amount;
+		filterBlur.blurY = amount;
+	}
+
+	function pause():Void {
+		// This is temp substate, it will be destroyed after closing
+		trace("pausa");
+		var tempState:PauseMenu = new PauseMenu();
+		openSubState(tempState);
+		tempState.setState(this);
 	}
 }

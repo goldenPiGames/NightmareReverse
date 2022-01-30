@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<button id="continue" label="resume" width="80" height="20">
+		<anchor x="50%" />
+		<param type="string" value="unpause" />
+	</button>
+	<button id="return" label="exit" width="80" height="20">
+		<anchor x="50%" />
+		<param type="string" value="returnmain" />
+	</button>
+
+	<align axis="vertical">
+		<objects value="continue,return"/>
+		<bounds top="30%" bottom="70%"/>
+	</align>
+</data>

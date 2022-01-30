@@ -3,7 +3,7 @@ package menus;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUITabMenu;
 
-class VictoryMenu extends PrxMenuState {
+class VictoryMenu extends PrxUIState {
 	public override function create() {
 		_xml_id = "victorymenu";
 		super.create();

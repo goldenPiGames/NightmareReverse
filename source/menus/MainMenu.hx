@@ -2,7 +2,7 @@ package menus;
 
 import flixel.FlxG;
 
-class MainMenu extends PrxMenuState {
+class MainMenu extends PrxUIState {
 	public override function create() {
 		_xml_id = "mainmenu";
 		super.create();

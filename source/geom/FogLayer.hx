@@ -138,7 +138,10 @@ class FogLayerShader extends FlxShader {
 		}
 	}
 	void main() {
-		vec2 worldcoords = vec2(gl_FragCoord.x, height - gl_FragCoord.y) / camDiv + vec2(cam.x, cam.y) + camAdd;
+		vec2 pixelCoord = openfl_TextureCoordv * openfl_TextureSize;
+		//vec2 worldcoords = pixelCoord / camDiv + vec2(cam.x, cam.y) + camAdd;
+		vec2 worldcoords = pixelCoord + cam;
+		
 		if (isVisible(worldcoords)) {
 			gl_FragColor = vec4(0, 0, 0, 0);
 		} else {

@@ -1,19 +1,25 @@
 package menus;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUICursor;
 import flixel.addons.ui.FlxUIState;
+import flixel.addons.ui.FlxUISubState;
 import flixel.addons.ui.FlxUITypedButton;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
 
-class PrxMenuState extends FlxUIState {
+class PrxUISubState extends FlxUISubState {
+	var state:PlayState;
+
 	public override function create() {
 		_makeCursor = true;
 		super.create();
 		cursor.setDefaultKeys(FlxUICursor.KEYS_ARROWS | FlxUICursor.KEYS_WASD | FlxUICursor.KEYS_TAB| FlxUICursor.GAMEPAD_DPAD);
 	}
+
+	//COPY FROM PrxMenuState
 
 	public override function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
 		if (destroyed)
@@ -37,8 +43,18 @@ class PrxMenuState extends FlxUIState {
 
 	}
 
-	function switchState(nextState:FlxState) {
-		//cursor.location = -1;
-		FlxG.switchState(nextState);
+	function anchorCamera():Void {
+		cameras = [state.hud.camera];
+		forEachOfType(FlxObject, anchorObject);
+	}
+
+	function anchorObject(o:FlxObject) {
+		o.scrollFactor.set(0, 0);
+		o.cameras = [state.hud.camera];
+	}
+
+	public function setState(instate:PlayState) {
+		state = instate;
+		anchorCamera();
 	}
 }
