@@ -1,5 +1,6 @@
 package projectiles;
 
+import entities.DreamEntity;
 import flixel.math.FlxPoint;
 import geom.SpriteDir.SpriteDirOrthog3;
 
@@ -9,7 +10,7 @@ class PowerWave extends Projectile {
 	public function new(source:DreamEntity, location:FlxPoint, speed:FlxPoint) {
 		super();
 		infoName = "Power Wave";
-		loadGraphic("assets/images/PowerWave.png", true, 32, 32);
+		loadGraphic("assets/sprites/PowerWave.png", true, 32, 32);
 		setSource(source);
 		setSize(4, 4);
 		offset.set(14, 24);

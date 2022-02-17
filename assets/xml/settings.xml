@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+
+	<button id="return" label="Return" width="80" height="20">
+		<anchor x="80%" y="90%" />
+		<param type="string" value="return" />
+	</button>
+</data>

@@ -1,0 +1,29 @@
+{
+	"bgColor":-10079454,
+	"tiles":[
+		{
+			"name":"Void",
+			"solid":false,
+			"void":true,
+			"spike":false,
+			"vision":true,
+			"blend":[true,false,false]
+		},
+		{
+			"name":"Floor",
+			"solid":false,
+			"void":false,
+			"spike":false,
+			"vision":true,
+			"blend":[true,true,false]
+		},
+		{
+			"name":"Wall",
+			"solid":true,
+			"spike":false,
+			"void":false,
+			"vision":false,
+			"blend":[false,false,true]
+		}
+	]
+}

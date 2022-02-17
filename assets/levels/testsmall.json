@@ -4,7 +4,7 @@
   "height": 200,
   "offsetX": 0,
   "offsetY": 0,
-  "values": {"tileset": "TileHouse"},
+  "values": {"music": "Vermeen_TheHunt"},
   "layers": [
     {
       "name": "entities",
@@ -45,7 +45,7 @@
       "gridCellHeight": 20,
       "gridCellsX": 10,
       "gridCellsY": 10,
-      "tileset": "TileSample",
+      "tileset": "House",
       "data": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0, 1, 1, 1, 1, 1, 2, 2, 1, 1, 0, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 2, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
       "exportMode": 0,
       "arrayMode": 0

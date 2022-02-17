@@ -11,6 +11,11 @@ class PrxG {
 	public static var sound:PrxSoundFrontend = new PrxSoundFrontend();
 
 	
+
+	public static function traceAndLog(sus:Dynamic):Void {
+		FlxG.log.add(sus);
+		trace(sus);
+	}
 }
 
 class PrxSoundFrontend {

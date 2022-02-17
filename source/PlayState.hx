@@ -1,7 +1,10 @@
 package;
 
-import DreamPlayer.PlayerDeathSource;
+import DreamPopup;
 import enemies.*;
+import entities.*;
+import entities.DreamPlayer.PlayerDeathSource;
+import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSubState;
@@ -11,6 +14,7 @@ import flixel.group.FlxGroup;
 import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogClickAndDragMouseMotion;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxPoint;
+import flixel.math.FlxVector;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.util.FlxSort;
 import geom.*;
@@ -19,9 +23,12 @@ import haxe.ValueException;
 import hud.DreamHUD;
 import menus.PauseMenu;
 import menus.VictoryMenu;
+import openfl.Assets;
 import openfl.filters.BlurFilter;
 import openfl.filters.ColorMatrixFilter;
 import projectiles.Projectile;
+import scripting.DreamScriptManager;
+import scripting.Trigger;
 
 class PlayState extends FlxState {
 	var olevel:PrxOgmo3Loader;
@@ -40,31 +47,30 @@ class PlayState extends FlxState {
 	var playerJustDied:Bool = false;
 	var playerDeathSource:PlayerDeathSource;
 	var enemyJustDied:Bool = false;
-	var sceneUpdateGroup:FlxTypedGroup<DreamEntity>;
-	var inSceneMode:Bool = false;
-	var sceneTime:Float = 0;
-	var sceneType:String;
+	var sceneUpdateGroup:FlxTypedGroup<FlxBasic>;
 	var filterBlur:BlurFilter;
 	var filterColor:ColorMatrixFilter;
+	var scriptManager:DreamScriptManager;
+	var cameraFocus:CameraFocus;
 	public static inline var SCENE_DEATH = "death";
 
 	override public function create() {
+		Lang.ensureLoaded();
+		Cont.ensureLoaded();
 		super.create();
 
-
 		loadLevel();
-		//map.loadMapFromCSV(FlxStringUtil.imageToCSV("assets/maps/test.png"), "assets/images/tilesetRevenge.png", 10, 10, AUTO);
+		//map.loadMapFromCSV(FlxStringUtil.imageToCSV("assets/maps/test.png"), "assets/sprites/tilesetRevenge.png", 10, 10, AUTO);
 
-		FlxG.worldBounds.set(0, 0, 800, 600);
+	//	FlxG.worldBounds.set(0, 0, 800, 600);
 		FlxG.worldDivisions = 8;
-		FlxG.camera.follow(player, NO_DEAD_ZONE);
+		cameraFocus = new CameraFocus(this);
+		add(cameraFocus);
+		FlxG.camera.follow(cameraFocus, NO_DEAD_ZONE);
 		FlxG.camera.followLerp = .001;
-		//PrxG.sound.playMusicSide("assets/music/PeriTune_Ominous3.json", 0);
-		//PrxG.sound.playMusicSide(AssetPaths.PeriTune_Ominous3__json, 0);
-		PrxG.sound.playMusicSide(AssetPaths.Vermeen_TheHunt__json, 0);
 		FlxG.camera.zoom = 2;
 		filterBlur = new BlurFilter();
-		setBlur(1);
+		setBlur(.5);
 		filterColor = new ColorMatrixFilter([
 					-1,  0,  0, 0, 255,
 					 0, -1,  0, 0, 255,
@@ -75,18 +81,17 @@ class PlayState extends FlxState {
 	}
 
 	private function loadLevel() {
-		olevel = new PrxOgmo3Loader(AssetPaths.levels__ogmo,
+		olevel = new PrxOgmo3Loader("assets/levels/levels.ogmo",
 			"assets/levels/"+GameG.levelID+".json"
-			//AssetPaths.test__json
-			//"assets/levels/testsmall.json"
-			//AssetPaths.testsmall__json
 		);
-		wallmap = olevel.loadPrxTilemap("assets/images/"+olevel.getPrxTileset()+".png", "tiles");
+		PrxG.sound.playMusicSide("assets/music/"+olevel.getMusic()+".json", 0);
+		olevel.setBounds();
+		wallmap = olevel.loadPrxTilemap("tiles");
 		//wallmap.follow();
-		wallmap.setFTileProperties(0, NONE);
-		wallmap.setFTileProperties(1, NONE);
-		wallmap.setFTileProperties(2, ANY);
 		add(wallmap);
+		scriptManager = new DreamScriptManager(Assets.getText("assets/levelscripts/"+GameG.levelID+".json"));
+		scriptManager.setState(this);
+		FlxG.camera.bgColor = wallmap.metadata.bgColor;
 		fog = new FogLayer();
 		add(fog);
 		fog.camera = FlxG.camera;
@@ -112,8 +117,16 @@ class PlayState extends FlxState {
 				nent = new FloatingEyeLarge(entity);
 			case "FloatingEyeSmall":
 				nent = new FloatingEyeSmall(entity);
+			case "GrinningRobot":
+				nent = new GrinningRobot(entity);
+			case "Trigger":
+				nent = new Trigger(entity);
+			case "Checkpoint":
+				nent = new Checkpoint(entity);
+			case "AlarmedTile":
+				nent = new AlarmedTile(entity);
 			default:
-				FlxG.log.add(entity.name + " is not recognized");
+				PrxG.traceAndLog(entity.name + " is not recognized");
 				return;
 		}
 		entities.add(nent);
@@ -123,37 +136,21 @@ class PlayState extends FlxState {
 	override public function update(elapsed:Float) {
 		time += elapsed;
 		super.update(elapsed);
-		if (inSceneMode) {
-			sceneUpdateGroup.update(elapsed);
-			sceneTime -= elapsed;
-			if (sceneTime <= 0) {
-				inSceneMode = false;
-				entities.active = true;
-				entities.visible = true;
-				wallmap.visible = true;
-				fog.visible = true;
-				switch (sceneType) {
-					case SCENE_DEATH:
-						resetAfterDeath();
-				}
+		entities.sort(FlxSort.byY, FlxSort.ASCENDING);
+		if (enemyJustDied) {
+			recountEnemies();
+			if (numEnemiesAlive <= 0) {
+				youWin();
 			}
-		} else {
-			entities.sort(FlxSort.byY, FlxSort.ASCENDING);
-			if (enemyJustDied) {
-				recountEnemies();
-				if (numEnemiesAlive <= 0) {
-					youWin();
-				}
-			}
-			FlxG.overlap(entities, entities, touchyfunc);
-			if (playerJustDied) {
-				startPlayerDeath();
-			}
+		}
+		FlxG.overlap(entities, entities, touchyfunc);
+		if (playerJustDied) {
+			startPlayerDeath();
 		}
 		if (FlxG.keys.justPressed.RBRACKET) {
 			FlxG.camera.filtersEnabled = !FlxG.camera.filtersEnabled;
 		}
-		if (FlxG.keys.anyJustPressed([FlxKey.P, FlxKey.ESCAPE])) {
+		if (Cont.pause.triggered) {
 			pause();
 		}
 	}
@@ -163,6 +160,10 @@ class PlayState extends FlxState {
 		if (!entities.visible) {
 			sceneUpdateGroup.draw();
 		}
+	}
+
+	public function updateBehindPopup(elapsed:Float) {
+		sceneUpdateGroup.update(elapsed);
 	}
 
 	function recountEnemies() {
@@ -179,7 +180,7 @@ class PlayState extends FlxState {
 	}
 
 	public function indicatePursuit() {
-		FlxG.log.add("Time to die");
+		//FlxG.log.add("Time to die");
 		FlxG.sound.play("assets/sounds/Spotted3.ogg");
 		if (!pursuit) {
 			pursuit = true;
@@ -188,6 +189,7 @@ class PlayState extends FlxState {
 	}
 
 	function stopPursuit() {
+		pursuit = false;
 		PrxG.sound.setMusicSideCalm();
 	}
 
@@ -239,28 +241,35 @@ class PlayState extends FlxState {
 	}
 
 	function startPlayerDeath() {
-		stopPursuit();
 		
 		playerJustDied = false;
-		entities.active = false;
-		inSceneMode = true;
-		sceneUpdateGroup = new FlxTypedGroup<DreamEntity>();
+		sceneUpdateGroup = new FlxTypedGroup<FlxBasic>();
 		sceneUpdateGroup.add(player);
+		sceneUpdateGroup.add(cameraFocus);
+		var popup:DreamPopup = null;
 		if (Std.isOfType(playerDeathSource, Enemy)) {
 			var nem:Enemy = cast playerDeathSource;
 			sceneUpdateGroup.add(nem);
-			sceneTime = nem.playCatchAnimation(player);
-			sceneType = SCENE_DEATH;
-			wallmap.visible = false;
-			fog.visible = false;
+			popup = nem.getKillPopup();
 		} else {
-			sceneTime = player.playSelfDeathAnimation(cast playerDeathSource);
-			sceneType = SCENE_DEATH;
+			popup = new VoidDeathPopup();
+		}
+		if (popup == null) {
+			resetAfterDeath();
+		} else {
+			openDreamPopup(popup);
 		}
 	}
 
-	function resetAfterDeath():Void {
+	function openDreamPopup(poptepipic:DreamPopup) {
+		openSubState(poptepipic);
+		poptepipic.setState(this);
+	}
+
+	public function resetAfterDeath():Void {
+		stopPursuit();
 		entities.forEach(e->e.playerDeathReset());
+		cameraFocus.playerDeathReset();
 	}
 
 	public function indicateEnemyDied():Void {
@@ -273,6 +282,7 @@ class PlayState extends FlxState {
 
 	public function playDiegeticSound(source:FlxSoundAsset, location:FlxPoint, volume:Int):SoundIndicator {
 		var sonidito = new SoundIndicator(FlxG.sound.play(source), location, volume);
+		sonidito.setState(this);
 		soundIndicators.add(sonidito);
 		return sonidito;
 	}
@@ -287,10 +297,12 @@ class PlayState extends FlxState {
 	}
 
 	function pause():Void {
-		// This is temp substate, it will be destroyed after closing
-		trace("pausa");
 		var tempState:PauseMenu = new PauseMenu();
 		openSubState(tempState);
 		tempState.setState(this);
+	}
+	
+	public function activateScript(id:String, ?source:DreamEntity) {
+		scriptManager.activate(id, source);
 	}
 }

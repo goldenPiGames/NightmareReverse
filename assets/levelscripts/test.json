@@ -1,0 +1,9 @@
+{
+	"voicedemo":{
+		"what":"dialog",
+		"lines":[
+			{"speaker":"leir","id":"VoiceDemoPrexot1"},
+			{"speaker":"amm","id":"VoiceDemoBleak1"}
+		]
+	}
+}

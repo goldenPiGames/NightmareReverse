@@ -12,10 +12,11 @@ class FloatingEye extends Enemy {
 		super(args);
 		spriteDir = new SpriteDirOrthog3();
 		sightAngle = 90;
-		behaveState = Enemy.BEH_PATROL;
+		setStartBehave(behaveState = Enemy.BEH_PATROL);
 		pathPass = FLYING;
-		FlxG.watch.add(this, "behaveState");
-		FlxG.watch.add(this, "nodes");
+		//FlxG.watch.add(this, "behaveState");
+		//FlxG.watch.add(this, "nodes");
+		FlxG.watch.add(this, "looking");
 	}
 	
 	function addFloatingEyeAnims() {

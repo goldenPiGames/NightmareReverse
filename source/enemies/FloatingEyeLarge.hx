@@ -11,7 +11,7 @@ class FloatingEyeLarge extends FloatingEye {
 	public function new(args:Dynamic) {
 		super(args);
 		infoName = "Floating Eye (Large)";
-		loadGraphic("assets/images/FloatingEyeLarge.png", true, 64, 64);
+		loadGraphic("assets/sprites/FloatingEyeLarge.png", true, 64, 64);
 		setSizeS(32, 32);
 		offset.set(16, 32);
 		addFloatingEyeAnims();

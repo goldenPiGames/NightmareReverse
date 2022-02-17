@@ -1,5 +1,6 @@
 package geom;
 
+import entities.DreamEntity;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
@@ -109,7 +110,7 @@ class FogLayerShader extends FlxShader {
 	}
 	bool lineTraceToEye(vec2 where) {
 		vec2 diff = where - eye;
-		const float div = 200.0;
+		const float div = 420.0;
 		//float div = length(diff);
 		for (float i = 0.0; i < div; i++) {
 			if (isOpaque(eye + diff * i / div))
@@ -145,7 +146,7 @@ class FogLayerShader extends FlxShader {
 		if (isVisible(worldcoords)) {
 			gl_FragColor = vec4(0, 0, 0, 0);
 		} else {
-			gl_FragColor = vec4(0.25, 0.0, 0.25, 1.0);
+			gl_FragColor = vec4(0.125, 0.0, 0.125, 1.0);
 		}
 	}
 	')

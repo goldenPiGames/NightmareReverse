@@ -1,5 +1,6 @@
 package projectiles;
 
+import entities.DreamEntity;
 import flixel.FlxG;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader.EntityData;
 import geom.PrxTilemap;

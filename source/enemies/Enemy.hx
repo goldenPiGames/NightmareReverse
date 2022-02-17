@@ -1,5 +1,7 @@
 package enemies;
 
+import entities.DreamEntity;
+import entities.DreamPlayer;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
@@ -11,6 +13,7 @@ import geom.PrxTilemapDijkstra;
 class Enemy extends DreamEntity {
 	var behaveState:String = "patrol";
 	var lastBehaveState:String = "patrol";
+	var startBehaveState:String = "patrol";
 	var nodes:Array<FlxPoint>;
 	var nodeIndex:Int = 0;
 	var nodeCurrent:FlxPoint;
@@ -18,7 +21,6 @@ class Enemy extends DreamEntity {
 	var nodesEnded:Bool = false;
 	var sightAngle:Float = 90;
 	var sightRange:Float = 200;
-	var looking:Float = 0;
 	var lastSeenPlayerLoc:FlxPoint = null;
 	var lastSeenPlayerTime:Float = Math.NEGATIVE_INFINITY;
 	var lastReroutedTime:Float = Math.NEGATIVE_INFINITY;
@@ -29,6 +31,7 @@ class Enemy extends DreamEntity {
 	var pursuitSpeed:Float = 100;
 	var lostLookTime:Float = 1.2;
 
+	public static inline var BEH_WAIT = "wait";
 	public static inline var BEH_PATROL = "patrol";
 	public static inline var BEH_PURSUIT = "pursuit";
 	public static inline var BEH_PURSUIT_CORRIDOR = "pursuit_corridor";
@@ -60,6 +63,7 @@ class Enemy extends DreamEntity {
 			behaveTimer += elapsed;
 		lastBehaveState = behaveState;
 		switch (behaveState) {
+			case BEH_WAIT: behaveWait(elapsed);
 			case BEH_PATROL: behavePatrol(elapsed);
 			case BEH_PURSUIT: behavePursuit(elapsed);
 			case BEH_PURSUIT_CORRIDOR: behavePursuitCorridor(elapsed);
@@ -73,8 +77,14 @@ class Enemy extends DreamEntity {
 		}
 	}
 
+	function behaveWait(elapsed:Float) {
+		if (canSeePlayer()) {
+			startPursuit();
+		}
+	}
+	
 	function behavePatrol(elapsed:Float) {
-		if (moveToNextNode(patrolSpeed))
+		if (moveToNextNode(elapsed, patrolSpeed))
 			lookVelocity();
 		if (canSeePlayer()) {
 			startPursuit();
@@ -94,8 +104,8 @@ class Enemy extends DreamEntity {
 			//TODO LATER: continue going down corridor
 			//if (getMidpoint().distanceTo(lastSawPlayerLoc) < 5)
 		} else {
-			lookVelocity();
-			faceLooking();
+			//lookVelocity();
+			//faceLooking();
 			if (lastSeenPlayerTime > lastReroutedTime && state.timeSince(lastReroutedTime) >= .2) {
 				deek = state.wallmap.getDijkstra(this);
 				paff = deek.getPathTo(lastSeenPlayerLoc);
@@ -112,7 +122,7 @@ class Enemy extends DreamEntity {
 					}
 				}
 			}
-			moveToNextNode(pursuitSpeed);
+			moveToNextNode(elapsed, pursuitSpeed);
 		}
 	}
 
@@ -136,14 +146,13 @@ class Enemy extends DreamEntity {
 	}
 
 	function behaveReturn(elapsed) {
-		if (moveToNextNode(patrolSpeed))
+		if (moveToNextNode(elapsed, patrolSpeed))
 			lookVelocity();
 		if (canSeePlayer()) {
 			startPursuit();
 		} else if (nodesEnded) {
-			loadPatrolPath();
-			behaveState = BEH_PATROL;
-		} else {
+			returnedToSpawn();
+		} else if (startData.nodes != null) {
 			var here:FlxPoint = getMidpoint();
 			for (i in 0...startData.nodes.length) {
 				if (here.distanceTo(FlxPoint.weak(startData.nodes[i].x, startData.nodes[i].y)) < 3) {
@@ -210,11 +219,13 @@ class Enemy extends DreamEntity {
 		return false;
 	}
 
-	function moveToNextNode(fastness:Float):Bool {
+	function moveToNextNode(elapsed:Float, fastness:Float):Bool {
 		if (nodesEnded) {
 			//velocity = new FlxPoint(0, 0);
 			return false;
 		}
+		if (nodes == null)
+			return false;
 		if (nodeCurrent == null)
 			setNodeCurrent();
 		if (nodeCurrent == null) {
@@ -243,6 +254,8 @@ class Enemy extends DreamEntity {
 		} else {
 			diff.length = fastness;
 			velocity = diff;
+			lookVelocity();
+			faceLooking();
 			return true;
 		}
 	}
@@ -280,7 +293,7 @@ class Enemy extends DreamEntity {
 			return false;
 		}
 		//line of sight
-		if (!state.wallmap.ray(pmid, emid, null)) {
+		if (!state.wallmap.rayVision(pmid, emid)) {
 			//FlxG.log.add("Line of sight obstructed");
 			return false;
 		}
@@ -300,25 +313,6 @@ class Enemy extends DreamEntity {
 	function lookAt(at:FlxPoint) {
 		var vect:FlxVector = getMidpoint().subtractPoint(at);
 		return vect.degrees + 180;
-	}
-
-	function faceLooking() {
-		switch ((Math.round(FlxAngle.wrapAngle(looking) / 90) + 4) % 4) {
-			case 0: facing = RIGHT;
-			case 1: facing = DOWN;
-			case 2: facing = LEFT;
-			case 3: facing = UP;
-		}
-	}
-
-	function getFacingVelocity(magnitude:Float):FlxVector {
-		switch (facing) {
-			case UP: return new FlxVector(0, -magnitude);
-			case DOWN: return new FlxVector(0, magnitude);
-			case LEFT: return new FlxVector(-magnitude, 0);
-			case RIGHT: return new FlxVector(magnitude, 0);
-			default: return new FlxVector(0, 0);
-		}
 	}
 
 	function setPursuitPath(paff:Array<FlxPoint>):Bool {
@@ -352,13 +346,14 @@ class Enemy extends DreamEntity {
 		}
 	}
 
-	public override function playerDeathReset() {
-		super.playerDeathReset();
-		behaveState = BEH_PATROL;
+	override function generalReset() {
+		super.generalReset();
+		behaveState = startBehaveState;
 		if (startData.nodes != null) {
 			loadPatrolPath();
 		}
 	}
+
 
 	public override function isPreventingVictory():Bool {
 		return alive;
@@ -373,5 +368,20 @@ class Enemy extends DreamEntity {
 		behaveState = BEH_CATCHING;
 		velocity = new FlxPoint(0, 0);
 		return 2;
+	}
+
+	function setStartBehave(byeah:String) {
+		behaveState = byeah;
+		startBehaveState = byeah;
+		lastBehaveState = byeah;
+	}
+
+	function returnedToSpawn() {
+		loadPatrolPath();
+		behaveState = startBehaveState;
+	}
+
+	public function getKillPopup():DreamPopup {
+		return null;
 	}
 }

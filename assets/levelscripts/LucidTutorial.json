@@ -1,0 +1,31 @@
+{
+	"intro":{
+		"what":"dialog",
+		"lines":[
+			{"speaker":"amm","id":"LucidTutorial_Intro1"},
+			{"speaker":"aps","id":"LucidTutorial_Intro2"},
+			{"speaker":"amm","id":"LucidTutorial_Intro3"},
+			{"speaker":"aps","id":"LucidTutorial_Intro4"},
+			{"speaker":"amm","id":"LucidTutorial_Intro5"},
+			{"speaker":"aps","id":"LucidTutorial_Intro6"},
+			{"speaker":"aps","id":"LucidTutorial_Intro7"}
+		]
+	},
+	"lookvoid":{
+		"what":"dialog",
+		"lines":[
+			{"speaker":"aps","id":"LucidTutorial_LookVoid1"}
+		]
+	},
+	"robot":{
+		"what":"dialog",
+		"lines":[
+			{"speaker":"aps","id":"LucidTutorial_Robot1"},
+			{"speaker":"amm","id":"LucidTutorial_Robot2"},
+			{"speaker":"aps","id":"LucidTutorial_Robot3"},
+			{"speaker":"aps","id":"LucidTutorial_Robot4"},
+			{"speaker":"amm","id":"LucidTutorial_Robot5"},
+			{"speaker":"aps","id":"LucidTutorial_Robot6"}
+		]
+	}
+}

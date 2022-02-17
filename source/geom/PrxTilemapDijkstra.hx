@@ -1,7 +1,10 @@
 package geom;
 
+import entities.DreamEntity;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
+import flixel.util.FlxDirection;
+import flixel.util.FlxDirectionFlags;
 
 
 class PrxTilemapDijkstra {
@@ -54,17 +57,22 @@ class PrxTilemapDijkstra {
 			}
 		}
 		entries[startIndex].setStart();
+		entries[startIndex].prevDirection = thing.getInitialPathDirection();
 		var currentIndex:Int = startIndex;
 		var shortestDistance:Float;
 		while (true) {
 			//left
-			maybeAddEdge(currentIndex, currentIndex-1, 1);
+			maybeAddEdge(currentIndex, currentIndex-1, 1, FlxDirectionFlags.LEFT);
 			//right
-			maybeAddEdge(currentIndex, currentIndex+1, 1);
+			maybeAddEdge(currentIndex, currentIndex+1, 1, FlxDirectionFlags.RIGHT);
 			//up
-			maybeAddEdge(currentIndex, currentIndex-rowSize, 1);
+			maybeAddEdge(currentIndex, currentIndex-rowSize, 1, FlxDirectionFlags.UP);
 			//down
-			maybeAddEdge(currentIndex, currentIndex+rowSize, 1);
+			maybeAddEdge(currentIndex, currentIndex+rowSize, 1, FlxDirectionFlags.DOWN);
+			//diagonals
+			if (!thing.pathOrthogOnly) {
+				
+			}
 			//choose the next node
 			//trace("at: "+tileToString(startIndex));
 			entries[currentIndex].known = true;
@@ -109,14 +117,17 @@ class PrxTilemapDijkstra {
 			//trace(tileToString(currIndex));
 			path.unshift(map.getTileCoordsByIndex(currIndex, true).addPoint(thingPointOffset));
 			//if (path.length > 69) {throw "fuck";}
+			//trace(entries[currIndex].toStringDebugPos(rowSize));
 			currIndex = entries[currIndex].previous;
 		}
-		var i:Int = 1;
-		while (i < path.length - 1) {
-			if (PrxGeomMisc.arePointsColinear(path[i-1], path[i], path[i+1])) {
-				path.splice(i, 1);
-			} else {
-				i++;
+		if (thing.pathShouldSimplify) {
+			var i:Int = 1;
+			while (i < path.length - 1) {
+				if (PrxGeomMisc.arePointsColinear(path[i-1], path[i], path[i+1])) {
+					path.splice(i, 1);
+				} else {
+					i++;
+				}
 			}
 		}
 		return path;
@@ -130,8 +141,8 @@ class PrxTilemapDijkstra {
 		return entries[indexOffset(from, horiz, vert)].accessible;
 	}
 
-	inline function maybeAddEdge(from:Int, to:Int, edgeLength:Float) {
-		entries[to].maybeSetPath(from, entries[from].distance + edgeLength);
+	inline function maybeAddEdge(from:Int, to:Int, edgeLength:Float, dir:FlxDirectionFlags) {
+		entries[to].maybeSetPath(from, entries[from].distance + edgeLength + (dir == entries[from].prevDirection ? 0 : .125), dir);
 	}
 }
 
@@ -141,6 +152,7 @@ class PrxDijkstraEntry {
 	public var known:Bool;
 	public var distance:Float;
 	public var previous:Int;
+	public var prevDirection:FlxDirectionFlags = FlxDirectionFlags.NONE;
 	public var accessible:Bool;
 	public var touched:Bool;
 	public var ending:Bool;
@@ -162,15 +174,20 @@ class PrxDijkstraEntry {
 		previous = index;
 	}
 
-	public function maybeSetPath(from:Int, newDistance:Float):Bool {
+	public function maybeSetPath(from:Int, newDistance:Float, dir:FlxDirectionFlags):Bool {
 		//trace(from+" to "+index+": "+newDistance+" vs "+distance+")");
 		if (accessible && (newDistance < distance || !touched)) {
 			previous = from;
+			prevDirection = dir;
 			distance = newDistance;
 			touched = true;
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	public function toStringDebugPos(rowSize:Int):String {
+		return "("+(index%rowSize)+","+Std.int(index/rowSize)+") ("+distance+")";
 	}
 }

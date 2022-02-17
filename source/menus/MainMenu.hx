@@ -13,6 +13,8 @@ class MainMenu extends PrxUIState {
 			case "playlevel":
 				GameG.levelID = cast params[1];
 				FlxG.switchState(new PlayState());
+			case "settings":
+				FlxG.switchState(new SettingsMenu());
 		}
 	}
 }

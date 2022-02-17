@@ -9,9 +9,11 @@ import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUISubState;
 import flixel.addons.ui.FlxUITypedButton;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
+import menus.PrxUIState;
 
-class PrxUISubState extends FlxUISubState {
+class PrxUISubState extends FlxUISubState implements IPrxUIState {
 	var state:PlayState;
+	var haveAnchoredCamera:Bool = false;
 
 	public override function create() {
 		_makeCursor = true;
@@ -24,28 +26,30 @@ class PrxUISubState extends FlxUISubState {
 	public override function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
 		if (destroyed)
 			return;
-		/*if (name == "down_button" && params != null && params.length >= 2) {
-			GameG.levelID = cast params[1];
-			switchState(new PlayState());
-		}*/
-		//arigato playstatewolf-sensei
-		switch (name) { // check which event was called
-			case FlxUITypedButton.CLICK_EVENT:
-				var widget:IFlxUIWidget = cast(sender, IFlxUIWidget); // get the widget that called the event
-				if (widget != null && (widget is FlxUIButton)) { // we are over a button indeed
-					var btn:FlxUIButton = cast(widget, FlxUIButton); //  get the btn
-					getButtonEvent(btn.name, params);
-				}
-		}
+		PrxUIState.getEventI(this, name, sender, data, params);
 	}
 
 	public function getButtonEvent(name:String, params:Array<Dynamic>) {
 
 	}
 
-	function anchorCamera():Void {
+	public override function update(elapsed:Float) {
+		super.update(elapsed);
+		if (!haveAnchoredCamera) {
+			tryToAnchorCamera();
+		}
+	}
+
+	function tryToAnchorCamera():Void {
 		cameras = [state.hud.camera];
-		forEachOfType(FlxObject, anchorObject);
+		forceScrollFactor(0, 0);
+		if (_ui != null) {
+			haveAnchoredCamera = true;
+			_ui.group.forEach(anchorObject);
+		}
+		//else trace("_ui does not exist yet");
+		//for the museum: before i realized that the buttons are not kept in the state's normal group
+		//forEachOfType(FlxObject, anchorObject);
 	}
 
 	function anchorObject(o:FlxObject) {
@@ -55,6 +59,6 @@ class PrxUISubState extends FlxUISubState {
 
 	public function setState(instate:PlayState) {
 		state = instate;
-		anchorCamera();
+		tryToAnchorCamera();
 	}
 }

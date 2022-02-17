@@ -1,0 +1,29 @@
+{
+	"bgColor":-15658735,
+	"tiles":[
+		{
+			"name":"Void",
+			"solid":false,
+			"void":true,
+			"spike":false,
+			"vision":true,
+			"blend":[true,false,false]
+		},
+		{
+			"name":"Grass",
+			"solid":false,
+			"void":false,
+			"spike":false,
+			"vision":true,
+			"blend":[true,true,false]
+		},
+		{
+			"name":"Trees",
+			"solid":true,
+			"spike":false,
+			"void":false,
+			"vision":false,
+			"blend":[false,false,true]
+		}
+	]
+}
