@@ -16,7 +16,6 @@ class Dialog extends FlxText {
 
 	public function new(x:Float, y:Float, width:Float, height:Int) {
 		super(x, y, width, "", height);
-		//FlxG.watch.add(this, "bold");
 	}
 
 	public function play(newlines:Array<DialogLine>) {

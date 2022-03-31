@@ -1,6 +1,7 @@
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
+import states.PlayState;
 
 class DreamPopup extends FlxSubState {
 	var state:PlayState;

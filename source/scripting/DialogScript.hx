@@ -1,5 +1,7 @@
 package scripting;
+
 import hud.Dialog.DialogLine;
+import states.PlayState;
 
 class DialogScript extends DreamScript {
 	public var lines:Array<DialogLine>;

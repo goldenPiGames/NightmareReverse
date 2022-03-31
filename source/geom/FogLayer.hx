@@ -30,10 +30,7 @@ class FogLayer extends FlxSprite {
 
 	public function setEye(ent:DreamEntity) {
 		eye = ent;
-		/*FlxG.watch.add(camera, "zoom");
-		FlxG.watch.add(camera, "width");*/
-		FlxG.watch.add(this, "width");
-		FlxG.watch.add(FlxG, "width");
+		
 	}
 
 /*	public override function update(elapsed:Float) {

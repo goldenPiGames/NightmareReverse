@@ -10,13 +10,16 @@ import geom.SpriteDir.SpriteDirOrthog3;
 class FloatingEye extends Enemy {
 	public function new(args:Dynamic) {
 		super(args);
-		spriteDir = new SpriteDirOrthog3();
+		setSpriteDir(SpriteDirOrthog3);
 		sightAngle = 90;
 		setStartBehave(behaveState = Enemy.BEH_PATROL);
 		pathPass = FLYING;
+		#if FLX_DEBUG
 		//FlxG.watch.add(this, "behaveState");
 		//FlxG.watch.add(this, "nodes");
-		FlxG.watch.add(this, "looking");
+		//FlxG.watch.add(this, "looking");
+		FlxG.watch.add(this, "animationF");
+		#end
 	}
 	
 	function addFloatingEyeAnims() {

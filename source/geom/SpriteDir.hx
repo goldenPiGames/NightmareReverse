@@ -11,6 +11,10 @@ class SpriteDir {
 	public function setAngle(looking:Float) {
 		
 	}
+
+	function toString() {
+		return prefix + (flip ? "F" : "");
+	}
 }
 
 class SpriteDirStatic extends SpriteDir {

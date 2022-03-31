@@ -14,7 +14,7 @@ class PowerWave extends Projectile {
 		setSource(source);
 		setSize(4, 4);
 		offset.set(14, 24);
-		spriteDir = new SpriteDirOrthog3();
+		setSpriteDir(SpriteDirOrthog3);
 		animation.add("szoom", [0]);
 		animation.add("uzoom", [1]);
 		animation.add("dzoom", [1]);

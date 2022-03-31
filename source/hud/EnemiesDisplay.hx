@@ -1,6 +1,7 @@
 package hud;
 
 import flixel.text.FlxText;
+import states.PlayState;
 
 class EnemiesDisplay extends FlxText {
 	var state:PlayState;

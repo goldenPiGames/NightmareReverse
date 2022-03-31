@@ -11,6 +11,7 @@ import flixel.util.typeLimit.OneOfTwo;
 import geom.AlarmedTile;
 import geom.SpriteDir.SpriteDirSingleFlip;
 import projectiles.PowerWave;
+import states.PlayState;
 
 typedef PlayerDeathSource = OneOfTwo<String, Enemy>;
 
@@ -34,7 +35,7 @@ class DreamPlayer extends DreamEntity {
 		forceVisible = true;
 		loadGraphic("assets/sprites/Ammette.png", true, 64, 64);
 		team = DreamEntity.TEAM_PLAYER;
-		spriteDir = new SpriteDirSingleFlip();
+		setSpriteDir(SpriteDirSingleFlip);
 		animation.add("stand", [0]);
 		animation.add("jog", [1, 2, 3, 4, 5, 6, 7, 8], FOOTSTEP_INC_JOG*4, true);
 		animation.add("sneak", [9, 10, 11, 12, 13, 14, 15, 16], FOOTSTEP_INC_SNEAK*4, true);

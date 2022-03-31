@@ -1,4 +1,4 @@
-package;
+package states;
 
 import DreamPopup;
 import enemies.*;
@@ -21,21 +21,22 @@ import geom.*;
 import geom.FogLayer;
 import haxe.ValueException;
 import hud.DreamHUD;
-import menus.PauseMenu;
-import menus.VictoryMenu;
+import misc.PrxTypedGroup;
 import openfl.Assets;
 import openfl.filters.BlurFilter;
 import openfl.filters.ColorMatrixFilter;
 import projectiles.Projectile;
 import scripting.DreamScriptManager;
 import scripting.Trigger;
+import states.PauseMenu;
+import states.VictoryMenu;
 
-class PlayState extends FlxState {
+class PlayState extends PrxState {
 	var olevel:PrxOgmo3Loader;
 	public var wallmap:PrxTilemap;
 	public var player:DreamPlayer;
-	public var entities:FlxTypedGroup<DreamEntity>;
-	public var soundIndicators:FlxTypedGroup<SoundIndicator>;
+	public var entities:PrxTypedGroup<DreamEntity>;
+	public var soundIndicators:PrxTypedGroup<SoundIndicator>;
 	public var pursuit:Bool = false;
 	public var powered:Bool = false;
 	public var time:Float = 0;
@@ -47,7 +48,7 @@ class PlayState extends FlxState {
 	var playerJustDied:Bool = false;
 	var playerDeathSource:PlayerDeathSource;
 	var enemyJustDied:Bool = false;
-	var sceneUpdateGroup:FlxTypedGroup<FlxBasic>;
+	var sceneUpdateGroup:PrxTypedGroup<FlxBasic>;
 	var filterBlur:BlurFilter;
 	var filterColor:ColorMatrixFilter;
 	var scriptManager:DreamScriptManager;
@@ -55,8 +56,6 @@ class PlayState extends FlxState {
 	public static inline var SCENE_DEATH = "death";
 
 	override public function create() {
-		Lang.ensureLoaded();
-		Cont.ensureLoaded();
 		super.create();
 
 		loadLevel();
@@ -96,10 +95,10 @@ class PlayState extends FlxState {
 		add(fog);
 		fog.camera = FlxG.camera;
 		fog.setTilemap(wallmap);
-		entities = new FlxTypedGroup<DreamEntity>();
+		entities = new PrxTypedGroup<DreamEntity>();
 		add(entities);
 		olevel.loadEntities(placeEntity, "entities");
-		soundIndicators = new FlxTypedGroup<SoundIndicator>();
+		soundIndicators = new PrxTypedGroup<SoundIndicator>();
 		add(soundIndicators);
 		hud = new DreamHUD(this);
 		add(hud);
@@ -243,7 +242,7 @@ class PlayState extends FlxState {
 	function startPlayerDeath() {
 		
 		playerJustDied = false;
-		sceneUpdateGroup = new FlxTypedGroup<FlxBasic>();
+		sceneUpdateGroup = new PrxTypedGroup<FlxBasic>();
 		sceneUpdateGroup.add(player);
 		sceneUpdateGroup.add(cameraFocus);
 		var popup:DreamPopup = null;

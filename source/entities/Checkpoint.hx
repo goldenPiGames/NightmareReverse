@@ -10,7 +10,7 @@ class Checkpoint extends DreamEntity {
 		infoName = "Checkpoint";
 		touchPriority = 64;
 		loadGraphic("assets/sprites/Checkpoint.png", true, 32, 32);
-		spriteDir = new SpriteDirStatic();
+		setSpriteDir(SpriteDirStatic);
 		animation.add("down", [0], 1, true);
 		animation.add("raise", [1,2,3], 15, false);
 		setSizeS(16, 16);

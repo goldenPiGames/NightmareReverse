@@ -11,7 +11,7 @@ class AlarmedTile extends ConditionalTile {
 		infoName = "Alarmed Tile";
 		touchPriority = 48;
 		loadGraphic("assets/sprites/SpikeTile.png", true, 20, 24);
-		spriteDir = new SpriteDirStatic();
+		setSpriteDir(SpriteDirStatic);
 		animation.add("inactive", [2,1,0], 30, false);
 		animation.add("active", [1,2,3], 30, false);
 		offset.set(0, 4);

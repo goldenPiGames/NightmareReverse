@@ -1,4 +1,5 @@
 package scripting;
+import states.PlayState;
 
 class DreamScript {
 	public function new() {

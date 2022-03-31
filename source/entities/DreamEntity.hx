@@ -8,19 +8,24 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.util.FlxDirectionFlags;
 import geom.ClearWays;
+import geom.FacingAnimationController;
 import geom.PrxPassFlags;
 import geom.PrxTilemap.PrxTilesetTileMetadata;
 import geom.SpriteDir;
 import projectiles.Projectile;
+import states.PlayState;
 
 class DreamEntity extends FlxSprite {
+	//super boring internals - do not touch
+	public var spriteDegrees:Float;
+	var animationF:FacingAnimationController;
 	var state:PlayState;
+
+	//the stuff
 	var startData:EntityData;
 	var startAnimation:String;
 	public var infoName:String;
 	public var hittable:Bool = false;
-	var spriteDir:SpriteDir;
-	var animName:String;
 	var team:Int;
 	var forceVisible:Bool = false;
 	public var touchPriority:Int = 0;
@@ -36,6 +41,7 @@ class DreamEntity extends FlxSprite {
 	public function new(?args:EntityData) {
 		super();
 		infoName = "???";
+		flipX = false;
 		startData = args;
 		if (args != null) {
 			x = args.x;
@@ -43,6 +49,16 @@ class DreamEntity extends FlxSprite {
 			flipX = args.flippedX;
 			faceStarting();
 		}
+	}
+
+	override function initVars() {
+		super.initVars();
+		animationF = new FacingAnimationController(this);
+		animation = animationF;
+	}
+
+	inline function setSpriteDir(dirp:Class<SpriteDir>) {
+		animationF.spriteDir = Type.createInstance(dirp, []);
 	}
 	
 	public override function update(elapsed:Float) {
@@ -84,26 +100,22 @@ class DreamEntity extends FlxSprite {
 		y = startData.y - height/2;
 	}
 
-	function updateSpriteDir(deg:Float) {
-		var prevPrefix:String = spriteDir.prefix;
-		spriteDir.setAngle(deg);
-		flipX = spriteDir.flip;
-		if (spriteDir.prefix != prevPrefix) {
-			var fr:Int = animation.frameIndex;
-			animation.play(spriteDir.prefix+animName);
-			//animation.frameIndex = fr;
-			//FlxG.log.add(fr);
-		}
-	}
 	
 	function updateSpriteDirByVelocity() {
 		var yeet:FlxVector = velocity;
 		updateSpriteDir(yeet.degrees);
 	}
 
+	inline function updateSpriteDir(deg:Float) {
+		spriteDegrees = deg;
+	}
+
+	public inline function getSpriteDegrees():Float {
+		return spriteDegrees;
+	}
+
 	function playAnimation(nom:String) {
-		animName = nom;
-		animation.play(spriteDir.prefix + animName);
+		animationF.playFace(nom);
 	}
 
 	function playSetStartAnimation(nom:String) {
@@ -245,7 +257,7 @@ class DreamEntity extends FlxSprite {
 	}
 
 	public override function toString():String {
-		return infoName + " x:"+x+" y:"+y;
+		return (exists?"":"--") + infoName + " x:"+Math.round(x) + " y:"+Math.round(y);
 	}
 
 	public function canPassTile(dab:PrxTilesetTileMetadata):Bool {

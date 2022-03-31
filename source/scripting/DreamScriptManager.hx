@@ -2,6 +2,7 @@ package scripting;
 
 import entities.DreamEntity;
 import haxe.Json;
+import states.PlayState;
 
 class DreamScriptManager {
 	var state:PlayState;

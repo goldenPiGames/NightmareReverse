@@ -3,6 +3,7 @@ package entities;
 import flixel.FlxG;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import geom.SpriteDir;
+import states.PlayState;
 
 class Dreamstone extends DreamEntity {
 	
@@ -13,7 +14,7 @@ class Dreamstone extends DreamEntity {
 		infoName = "Dreamstone";
 		touchPriority = 64;
 		loadGraphic("assets/sprites/Dreamstone.png", true, 16, 16);
-		spriteDir = new SpriteDirStatic();
+		setSpriteDir(SpriteDirStatic);
 		animation.add("float1", [0]);
 		animation.add("float2", [1]);
 		animation.add("float3", [2]);

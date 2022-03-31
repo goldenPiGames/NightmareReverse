@@ -2,6 +2,7 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.system.FlxSound;
+import states.PlayState;
 
 class SoundIndicator extends FlxSprite {
 	public static inline var VOLUME_LOUD = 3;

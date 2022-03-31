@@ -9,9 +9,8 @@ import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
 import openfl.Assets;
 
 typedef PrxTilemapValues = {
-	var tileset:String;
-	var music:String;
-	var scripts:Dynamic;
+	music:String,
+	?scripts:Dynamic
 }
 
 class PrxOgmo3Loader extends FlxOgmo3Loader {
@@ -33,12 +32,6 @@ class PrxOgmo3Loader extends FlxOgmo3Loader {
 		tilemap.applyTProperties();
 		return tilemap;
 	}
-
-	/*public function getPrxTileset():String {
-		return level.layers
-		var values:PrxTilemapValues = cast level.values;
-		return values.tileset;
-	}*/
 
 	public function getMusic():String {
 		var values:PrxTilemapValues = cast level.values;

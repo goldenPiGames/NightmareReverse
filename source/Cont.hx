@@ -28,7 +28,7 @@ class Cont {
 	static var loaded:Bool = false;
 	
 	public static function ensureLoaded():Void {
-		trace("fuck everything");
+		//trace("fuck everything");
 		if (!loaded) {
 			loadAndStuff();
 			FlxG.inputs.resetOnStateSwitch = false;

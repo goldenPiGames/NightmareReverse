@@ -3,7 +3,6 @@ package geom;
 import entities.DreamEntity;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.system.FlxAssets.FlxTilemapGraphicAsset;
@@ -12,13 +11,14 @@ import flixel.tile.FlxTilemap;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDirectionFlags;
 import haxe.Json;
+import misc.PrxTypedGroup;
 import openfl.Assets;
 
 class PrxTilemap extends FlxTilemap {
 
 	static inline var VIS_PER_FUNC:Int = 16;
 
-	var tileEntities:FlxTypedGroup<TileEntity>;
+	var tileEntities:PrxTypedGroup<TileEntity>;
 	var tileEntitiesGrouped:Array<Array<TileEntity>>;
 	var needRegroupTileEntities:Bool = true;
 	public var metadata:PrxTilesetMetadata;
@@ -32,7 +32,7 @@ class PrxTilemap extends FlxTilemap {
 	public function new() {
 		super();
 		useScaleHack = false;
-		tileEntities = new FlxTypedGroup<TileEntity>();
+		tileEntities = new PrxTypedGroup<TileEntity>();
 	}
 
 	public override function update(elapsed:Float) {

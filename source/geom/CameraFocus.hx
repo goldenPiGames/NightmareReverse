@@ -1,5 +1,8 @@
+package geom;
+
 import entities.DreamPlayer;
 import flixel.FlxObject;
+import states.PlayState;
 
 class CameraFocus extends FlxObject {
 	var state:PlayState;

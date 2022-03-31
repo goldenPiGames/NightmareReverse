@@ -52,10 +52,6 @@ class Enemy extends DreamEntity {
 		}
 	}
 
-	public override function setState(instate:PlayState) {
-		super.setState(instate);
-	}
-
 	function behaveUpdate(elapsed:Float) {
 		if (behaveState != lastBehaveState)
 			behaveTimer = 0;
@@ -383,5 +379,9 @@ class Enemy extends DreamEntity {
 
 	public function getKillPopup():DreamPopup {
 		return null;
+	}
+
+	override function toString() {
+		return super.toString() + " state:"+behaveState;
 	}
 }

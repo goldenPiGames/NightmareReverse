@@ -8,6 +8,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import geom.ClearWays;
 import geom.SpriteDir.SpriteDirOrthog3;
+import states.PlayState;
 
 class GrinningRobot extends Enemy {
 	var stepDelay:Float = 1;
@@ -16,7 +17,7 @@ class GrinningRobot extends Enemy {
 		super(args);
 		infoName = "Grinning Robot";
 		loadGraphic("assets/sprites/GrinningRobot.png", true, 64, 64);
-		spriteDir = new SpriteDirOrthog3();
+		setSpriteDir(SpriteDirOrthog3);
 		setSizeS(12, 12);
 		offset.set(26, 44);
 		setStartBehave(Enemy.BEH_WAIT);
