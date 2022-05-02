@@ -28,6 +28,7 @@ class PauseMenu extends FlxSubState {
 		butt.addTextLang("Pause_exit");
 		butt.setOnClick(exit);
 		ui.add(butt);
+		ui.connectAuto();
 	}
 
 	public override function update(elapsed:Float) {

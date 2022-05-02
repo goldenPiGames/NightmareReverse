@@ -17,6 +17,13 @@
       "display": 0,
       "choices": ["PeriTune_Ominous3", "Vermeen_TheHunt"],
       "defaults": 0
+    },
+    {
+      "name": "weather",
+      "definition": "Enum",
+      "display": 0,
+      "choices": ["none", "rain"],
+      "defaults": 0
     }
   ],
   "defaultExportMode": ".json",

@@ -6,7 +6,7 @@ import misc.PrxTypedGroup;
 
 class PrxUICanvas extends PrxTypedGroup<PrxUIObject> {
 	//var state:PrxState;
-	var cursor:PrxUICursor;
+	public var cursor:PrxUICursor;
 	public var mouse:FlxPoint;
 
 	public function new() {
@@ -15,6 +15,7 @@ class PrxUICanvas extends PrxTypedGroup<PrxUIObject> {
 	}
 	
 	public override function update(elapsed:Float) {
+		cursor.justMoved = false;
 		mouse = FlxG.mouse.getPositionInCameraView(GameG.staticCam, mouse);
 		super.update(elapsed);
 		cursor.update(elapsed);
@@ -45,5 +46,14 @@ class PrxUICanvas extends PrxTypedGroup<PrxUIObject> {
 
 	public function startCursorAtFirst() {
 		startCursorAt(members[0]);
+	}
+
+	public function connectAuto() {
+		for (thing in members) {
+			thing.connectDown = maxByFunc(oting->oting.y>thing.y?-oting.y-Math.abs(oting.x-thing.x)*2:-5318008);
+			thing.connectUp = maxByFunc(oting->oting.y<thing.y?oting.y-Math.abs(oting.x-thing.x)*2:-5318008);
+			thing.connectRight = maxByFunc(oting->oting.x>thing.x?-oting.x-Math.abs(oting.y-thing.y)*2:-5318008);
+			thing.connectLeft = maxByFunc(oting->oting.x<thing.x?oting.x-Math.abs(oting.y-thing.y)*2:-5318008);
+		}
 	}
 }

@@ -10,7 +10,8 @@ import openfl.Assets;
 
 typedef PrxTilemapValues = {
 	music:String,
-	?scripts:Dynamic
+	?scripts:Dynamic,
+	weather:String,
 }
 
 class PrxOgmo3Loader extends FlxOgmo3Loader {
@@ -30,6 +31,7 @@ class PrxOgmo3Loader extends FlxOgmo3Loader {
 				tilemap.loadFMapFrom2DArray(layer.data2D, getPaddedTileset(tileset, cast tileGraphic), tileset.tileWidth, tileset.tileHeight);
 		}
 		tilemap.applyTProperties();
+		tilemap.initialTRefresh();
 		return tilemap;
 	}
 
@@ -41,6 +43,11 @@ class PrxOgmo3Loader extends FlxOgmo3Loader {
 	public function getScripts():Dynamic {
 		var values:PrxTilemapValues = cast level.values;
 		return values.scripts;
+	}
+
+	public function getWeather():String {
+		var values:PrxTilemapValues = cast level.values;
+		return values.weather;
 	}
 
 	/**

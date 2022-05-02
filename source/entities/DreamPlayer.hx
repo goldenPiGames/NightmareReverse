@@ -10,6 +10,7 @@ import flixel.math.FlxVector;
 import flixel.util.typeLimit.OneOfTwo;
 import geom.AlarmedTile;
 import geom.SpriteDir.SpriteDirSingleFlip;
+import misc.SfxSrc;
 import projectiles.PowerWave;
 import states.PlayState;
 
@@ -48,7 +49,6 @@ class DreamPlayer extends DreamEntity {
 	public override function setState(instate:PlayState) {
 		super.setState(instate);
 		instate.player = this;
-		instate.fog.setEye(this);
 	}
 
 	public override function update(elapsed:Float) {

@@ -22,6 +22,7 @@ class AlarmedTile extends ConditionalTile {
 			solid:false,
 			void:false,
 			spike:true,
+			roofed:true,
 			blend:null,
 			vision:true,
 		};

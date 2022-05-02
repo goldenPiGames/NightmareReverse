@@ -29,11 +29,6 @@ class PrxUIButton extends PrxUIObject {
 		add(text);
 	}
 
-
-	override function intersectsPoint(punt) {
-		return back != null && back.overlapsPoint(punt, false);
-	}
-
 	public function setOnClick(what:()->Void) {
 		onclick = what;
 	}

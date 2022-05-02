@@ -17,6 +17,23 @@ class PrxTypedGroup<T:FlxBasic> extends FlxTypedGroup<T> {
 		//this.members = this.members.filter(deletNonexistentButt);
 	}
 
+	public static inline var MAXBYFUNC_NOPE = -42069;
+	public function maxByFunc(func:T->Float, exclude:T = null, existsOnly:Bool=true):T {
+		var bestVal:Float = MAXBYFUNC_NOPE+1;
+		var bestObj:T = null;
+		for (i in 0...members.length) {
+			var currObj:T = members[i];
+			if (exclude != currObj && (!existsOnly || currObj.exists)) {
+				var currVal = func(currObj);
+				if (currVal > bestVal) {
+					bestVal = currVal;
+					bestObj = currObj;
+				}
+			}
+		}
+		return bestObj;
+	}
+
 	override function toString():String {
 		var str = "0: "+this.members[0];
 		for (i in 1...this.members.length) {

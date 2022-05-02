@@ -6,20 +6,15 @@ import entities.*;
 import entities.DreamPlayer.PlayerDeathSource;
 import flixel.FlxBasic;
 import flixel.FlxG;
-import flixel.FlxState;
-import flixel.FlxSubState;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
-import flixel.graphics.tile.FlxDrawQuadsItem;
-import flixel.group.FlxGroup;
-import flixel.input.actions.FlxActionInputAnalog.FlxActionInputAnalogClickAndDragMouseMotion;
-import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxPoint;
-import flixel.math.FlxVector;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.util.FlxSort;
-import geom.*;
-import geom.FogLayer;
-import haxe.ValueException;
+import geom.AlarmedTile;
+import geom.CameraFocus;
+import geom.PrxOgmo3Loader;
+import geom.PrxTilemap;
+import geom.vision.Vision;
 import hud.DreamHUD;
 import misc.PrxTypedGroup;
 import openfl.Assets;
@@ -30,8 +25,10 @@ import scripting.DreamScriptManager;
 import scripting.Trigger;
 import states.PauseMenu;
 import states.VictoryMenu;
+import weather.DreamWeather;
+import weather.Rain;
 
-class PlayState extends PrxState {
+class PlayState extends PrxState implements VisionState {
 	var olevel:PrxOgmo3Loader;
 	public var wallmap:PrxTilemap;
 	public var player:DreamPlayer;
@@ -40,11 +37,12 @@ class PlayState extends PrxState {
 	public var pursuit:Bool = false;
 	public var powered:Bool = false;
 	public var time:Float = 0;
-	public var fog:FogLayer;
 	public var hud:DreamHUD;
 	public var dreamstonesCollected:Int = 0;
 	public var dreamstonesTotal:Int = 0;
 	public var numEnemiesAlive:Int = 0;
+	public var vision:Vision;
+	var weather:DreamWeather;
 	var playerJustDied:Bool = false;
 	var playerDeathSource:PlayerDeathSource;
 	var enemyJustDied:Bool = false;
@@ -52,7 +50,7 @@ class PlayState extends PrxState {
 	var filterBlur:BlurFilter;
 	var filterColor:ColorMatrixFilter;
 	var scriptManager:DreamScriptManager;
-	var cameraFocus:CameraFocus;
+	public var cameraFocus:CameraFocus;
 	public static inline var SCENE_DEATH = "death";
 
 	override public function create() {
@@ -61,7 +59,6 @@ class PlayState extends PrxState {
 		loadLevel();
 		//map.loadMapFromCSV(FlxStringUtil.imageToCSV("assets/maps/test.png"), "assets/sprites/tilesetRevenge.png", 10, 10, AUTO);
 
-	//	FlxG.worldBounds.set(0, 0, 800, 600);
 		FlxG.worldDivisions = 8;
 		cameraFocus = new CameraFocus(this);
 		add(cameraFocus);
@@ -90,19 +87,22 @@ class PlayState extends PrxState {
 		add(wallmap);
 		scriptManager = new DreamScriptManager(Assets.getText("assets/levelscripts/"+GameG.levelID+".json"));
 		scriptManager.setState(this);
-		FlxG.camera.bgColor = wallmap.metadata.bgColor;
-		fog = new FogLayer();
-		add(fog);
-		fog.camera = FlxG.camera;
-		fog.setTilemap(wallmap);
+		GameG.movingCam.bgColor = wallmap.metadata.bgColor;
+
+		vision = Vision.make(this);
+		add(vision);
+		
 		entities = new PrxTypedGroup<DreamEntity>();
 		add(entities);
+		weather = makeWeather(olevel.getWeather());
+		add(weather);
 		olevel.loadEntities(placeEntity, "entities");
 		soundIndicators = new PrxTypedGroup<SoundIndicator>();
 		add(soundIndicators);
 		hud = new DreamHUD(this);
 		add(hud);
 		recountEnemies();
+		weather.startSound();
 	}
 	
 	private function placeEntity(entity:EntityData) {
@@ -130,6 +130,17 @@ class PlayState extends PrxState {
 		}
 		entities.add(nent);
 		nent.setState(this);
+	}
+
+	function makeWeather(type:String):DreamWeather {
+		switch (type) {
+			case "none":
+				return new DreamWeather(this);
+			case "rain":
+				return new Rain(this);
+			default:
+				return new DreamWeather(this);
+		}
 	}
 
 	override public function update(elapsed:Float) {
@@ -226,7 +237,7 @@ class PlayState extends PrxState {
 		powered = true;
 		PrxG.sound.playMusicSide("assets/music/PeriTune_Prairie5.json", 0);
 		entities.forEach(e->e.playerPowered());
-		fog.visible = false;
+		vision.reveal();
 	}
 
 	public function addProjectile(yeet:Projectile) {
@@ -303,5 +314,25 @@ class PlayState extends PrxState {
 	
 	public function activateScript(id:String, ?source:DreamEntity) {
 		scriptManager.activate(id, source);
+	}
+
+	public function getVisionSegments():Array<SegmentInfo> {
+		var damap:Array<SegmentInfo> = wallmap.getVisionSegments();
+		var seggs:Array<SegmentInfo>;
+		for (thing in entities) {
+			seggs = thing.getVisionSegments();
+			if (seggs != null) {
+				damap = damap.concat(seggs);
+			}
+		}
+		return damap;
+	}
+
+	public function getVisionEye():FlxPoint {
+		return player.getMidpoint();
+	}
+
+	public function getWallmap():PrxTilemap {
+		return wallmap;
 	}
 }

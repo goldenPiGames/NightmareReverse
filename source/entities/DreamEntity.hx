@@ -12,14 +12,17 @@ import geom.FacingAnimationController;
 import geom.PrxPassFlags;
 import geom.PrxTilemap.PrxTilesetTileMetadata;
 import geom.SpriteDir;
+import geom.vision.Vision.VisionEntity;
 import projectiles.Projectile;
 import states.PlayState;
 
-class DreamEntity extends FlxSprite {
+class DreamEntity extends FlxSprite implements VisionEntity {
 	//super boring internals - do not touch
 	public var spriteDegrees:Float;
 	var animationF:FacingAnimationController;
 	var state:PlayState;
+
+	var numVisibilityChecks = -1;
 
 	//the stuff
 	var startData:EntityData;
@@ -41,9 +44,11 @@ class DreamEntity extends FlxSprite {
 	public function new(?args:EntityData) {
 		super();
 		infoName = "???";
-		flipX = false;
 		startData = args;
 		if (args != null) {
+			if (args.flippedX == null) {
+				args.flippedX = false;
+			}
 			x = args.x;
 			y = args.y;
 			flipX = args.flippedX;
@@ -51,42 +56,46 @@ class DreamEntity extends FlxSprite {
 		}
 	}
 
-	override function initVars() {
-		super.initVars();
+	inline function setSpriteDir(dirp:Class<SpriteDir>) {
 		animationF = new FacingAnimationController(this);
 		animation = animationF;
-	}
-
-	inline function setSpriteDir(dirp:Class<SpriteDir>) {
 		animationF.spriteDir = Type.createInstance(dirp, []);
 	}
 	
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
+		updateVisibility();
+	}
+
+	function updateVisibility() {
 		visible = forceVisible || state.powered || checkVisibility();
 	}
 
 	function checkVisibility():Bool {
-		return checkVisibilityFrom(state.player.getMidpoint());
-	}
-
-	function checkVisibilityFrom(from:FlxPoint) {
-		final numChecks:Int = 3;
+		final numChecks:Int = numVisibilityChecks;
+		if (numChecks <= 0) {
+			//i don't know if this even works
+			return isVisibleAt(x, y);
+		}
 		for (i in 0...numChecks) {
-			if (state.wallmap.rayVision(from, FlxPoint.weak(x+width*i/numChecks, y))) {
+			if (isVisibleAt(x+width*i/numChecks, y)) {
 				return true;
 			}
-			if (state.wallmap.rayVision(from, FlxPoint.weak(x+width, y+height*i/numChecks))) {
+			if (isVisibleAt(x+width, y+height*i/numChecks)) {
 				return true;
 			}
-			if (state.wallmap.rayVision(from, FlxPoint.weak(x+width*(numChecks-i)/numChecks, y+height))) {
+			if (isVisibleAt(x+width*(numChecks-i)/numChecks, y+height)) {
 				return true;
 			}
-			if (state.wallmap.rayVision(from, FlxPoint.weak(x, y+height*(numChecks-i)/numChecks))) {
+			if (isVisibleAt(x, y+height*(numChecks-i)/numChecks)) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	inline function isVisibleAt(x:Float, y:Float):Bool {
+		return state.vision.isVisibleAt(x, y);
 	}
 
 	public function setState(instate:PlayState) {
@@ -96,8 +105,15 @@ class DreamEntity extends FlxSprite {
 	function setSizeS(w:Float, h:Float) {
 		width = w;
 		height = h;
+		setSize(w, h);
 		x = startData.x - width/2;
 		y = startData.y - height/2;
+	}
+
+	override function setSize(w, h) {
+		super.setSize(w, h);
+		if (numVisibilityChecks == -1)
+			numVisibilityChecks = Math.ceil(Math.max(width, height) / 10);
 	}
 
 	
@@ -112,6 +128,10 @@ class DreamEntity extends FlxSprite {
 
 	public inline function getSpriteDegrees():Float {
 		return spriteDegrees;
+	}
+
+	inline function playAnimationBasic(nom:String) {
+		animation.play(nom);
 	}
 
 	function playAnimation(nom:String) {
@@ -266,5 +286,10 @@ class DreamEntity extends FlxSprite {
 		if ((dab.void || dab.spike) && !pathPass.hasType(0))
 			return false;
 		return true;
+	}
+
+	/** Override this if this entity blocks vision */
+	public function getVisionSegments() {
+		return null;
 	}
 }

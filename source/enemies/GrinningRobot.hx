@@ -8,6 +8,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import geom.ClearWays;
 import geom.SpriteDir.SpriteDirOrthog3;
+import misc.SfxSrc;
 import states.PlayState;
 
 class GrinningRobot extends Enemy {

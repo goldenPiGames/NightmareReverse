@@ -4,19 +4,20 @@ import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 import geom.SpriteDir;
 
 class Checkpoint extends DreamEntity {
+	var current:Bool;
 
 	public function new(args:EntityData) {
 		super(args);
 		infoName = "Checkpoint";
 		touchPriority = 64;
 		loadGraphic("assets/sprites/Checkpoint.png", true, 32, 32);
-		setSpriteDir(SpriteDirStatic);
+		//setSpriteDir(SpriteDirStatic);
 		animation.add("down", [0], 1, true);
 		animation.add("raise", [1,2,3], 15, false);
 		setSizeS(16, 16);
 		offset.set(8, 8);
 		pathPass = GROUND;
-		playAnimation("down");
+		playAnimationBasic("down");
 	}
 
 	override function generalReset() {
@@ -35,10 +36,16 @@ class Checkpoint extends DreamEntity {
 	function activate(peep:DreamPlayer):Void {
 		peep.checkpoint = this;
 		state.entities.forEachOfType(Checkpoint, c->c.deactivate());
-		playAnimation("raise");
+		current = true;
+		playAnimationBasic("raise");
 	}
 
 	function deactivate() {
-		playAnimation("down");
+		current = false;
+		playAnimationBasic("down");
+	}
+
+	override function toString() {
+		return super.toString() + (current ? " current" : "");
 	}
 }

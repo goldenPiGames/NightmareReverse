@@ -17,6 +17,7 @@ class VictoryMenu extends PrxState {
 		butt.setOnClick(exit);
 		ui.add(butt);
 		ui.startCursorAtFirst();
+		ui.connectAuto();
 	}
 
 	function exit() {

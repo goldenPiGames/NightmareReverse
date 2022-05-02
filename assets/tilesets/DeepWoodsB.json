@@ -7,6 +7,7 @@
 			"void":true,
 			"spike":false,
 			"vision":true,
+			"roofed":false,
 			"blend":[true,false,false]
 		},
 		{
@@ -15,6 +16,7 @@
 			"void":false,
 			"spike":false,
 			"vision":true,
+			"roofed":false,
 			"blend":[true,true,false]
 		},
 		{
@@ -23,6 +25,7 @@
 			"spike":false,
 			"void":false,
 			"vision":false,
+			"roofed":false,
 			"blend":[false,false,true]
 		}
 	]

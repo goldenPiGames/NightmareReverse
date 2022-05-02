@@ -10,6 +10,7 @@ import flixel.tile.FlxBaseTilemap;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxArrayUtil;
 import flixel.util.FlxDirectionFlags;
+import geom.vision.Vision.SegmentInfo;
 import haxe.Json;
 import misc.PrxTypedGroup;
 import openfl.Assets;
@@ -26,8 +27,18 @@ class PrxTilemap extends FlxTilemap {
 	/** The functional data, which is actually used for most custom calculations. */
 	var _fdata:Array<Int>;
 
-	/** _fdata, modified by tile entites. **/
+	/** _fdata, modified by tile entites. */
 	var tstate:Array<PrxTilesetTileMetadata>;
+	/** the tstate used for out of bounds */
+	var tout:PrxTilesetTileMetadata = {
+		name:"Outside",
+		solid:true,
+		void:false,
+		spike:false,
+		vision:false,
+		roofed:false,
+		blend:[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+	}
 
 	public function new() {
 		super();
@@ -145,7 +156,15 @@ class PrxTilemap extends FlxTilemap {
 
 	public function canEntityPassCoords(thing:DreamEntity, where:FlxPoint):Bool {
 		//trace(thing.pathPass+" on "+_fdata[i]);
-		return thing.canPassTile(tstate[getTileIndexByCoords(where)]);
+		return thing.canPassTile(getTStateByCoords(where));
+	}
+
+	public inline function getTStateByCoords(where:FlxPoint):PrxTilesetTileMetadata {
+		var index = getTileIndexByCoords(where);
+		if (index < 0)
+			return tout;
+		else
+			return tstate[index];
 	}
 
 	/*function canEntityPassIndexRect(thing:DreamEntity, dex:Int, width:Int, height:Int):Bool {
@@ -174,30 +193,37 @@ class PrxTilemap extends FlxTilemap {
 		return new FlxPoint((wideness-1)/2*_tileWidth, (tallness-1)/2*_tileHeight);
 	}
 
-	public function getTileXByCoords(coord:FlxPoint):Int {
+	inline function getTStateByColRow(col:Int, row:Int):PrxTilesetTileMetadata {
+		if (col < 0 || col >= widthInTiles || row < 0 || row >= heightInTiles)
+			return tout;
+		return tstate[getTileIndexByColRow(col, row)];
+	}
+
+	inline function getTileIndexByColRow(col:Int, row:Int):Int {
+		return col + row*widthInTiles;
+	}
+
+	public function isTileOpaque(a:Int, b:Int):Bool {
+		//trace(getTStateByColRow(a, b));
+		return !getTStateByColRow(a, b).vision;
+	}
+
+	public inline function getWorldXByCol(col:Int):Float {
+		return x + col * _scaledTileWidth;
+	}
+
+	public inline function getWorldYByRow(row:Int):Float {
+		return y + row * _scaledTileHeight;
+	}
+
+	public inline function getTileXByCoords(coord:FlxPoint):Int {
 		var localX = coord.x - x;
 		return Std.int(localX / _scaledTileWidth);
 	}
 	
-	public function getTileYByCoords(coord:FlxPoint):Int {
+	public inline function getTileYByCoords(coord:FlxPoint):Int {
 		var localY = coord.y - y;
 		return Std.int(localY / _scaledTileHeight);
-	}
-
-	public function getOpacityRect(x:Int, y:Int, width:Int, height:Int):Array<Bool> {
-		var ray:Array<Bool> = new Array<Bool>();
-		for (i in 0...width) {
-			for (j in 0...height) {
-				ray[i + j*width] = isTileOpaque(x+i, y+j);
-			}
-		}
-		return ray;
-	}
-
-	public function isTileOpaque(a:Int, b:Int):Bool {
-		if (a < 0 || a >= widthInTiles || b < 0 || b >= heightInTiles)
-			return true;
-		return (_fdata[a + b*widthInTiles] == 2);//TODO change this when i have more functional floor types
 	}
 
 	public function getTileWidth():Dynamic {
@@ -218,7 +244,7 @@ class PrxTilemap extends FlxTilemap {
 		var stepX:Float = diffX / numSteps;
 		var stepY:Float = diffY / numSteps;
 		for (i in 0...numSteps) {
-			if (!tstate[Std.int(startX+stepX*i) + Std.int(startY+stepY*i)*widthInTiles].vision) {
+			if (!tstate[getTileIndexByColRow(Std.int(startX+stepX*i), Std.int(startY+stepY*i))].vision) {
 				return false;
 			}
 		}
@@ -253,6 +279,10 @@ class PrxTilemap extends FlxTilemap {
 		}
 	}
 
+	public function initialTRefresh() {
+		tstate = _fdata.map(f->metadata.tiles[f]);
+	}
+
 	public function loadMetadata(label:String):Void {
 		metadata = Json.parse(Assets.getText("assets/tilesets/"+label+".json"));
 	}
@@ -261,6 +291,61 @@ class PrxTilemap extends FlxTilemap {
 		for (i in 0...metadata.tiles.length) {
 			setFTileProperties(i, metadata.tiles[i].solid ? FlxDirectionFlags.ANY : FlxDirectionFlags.NONE);
 		}
+	}
+
+	public function getVisionSegments():Array<SegmentInfo> {
+		var seggs:Array<SegmentInfo> = [];
+		var curSeg:Int;
+		var blepco;
+		for (j in 0...heightInTiles-1) {
+			curSeg = -1;
+			blepco = getWorldYByRow(j+1);
+			for (i in 0...widthInTiles) {
+				if (getTStateByColRow(i, j).vision != getTStateByColRow(i, j+1).vision) {
+					if (curSeg < 0)
+						curSeg = i;
+				} else {
+					if (curSeg >= 0) {
+						seggs.push({
+							a:{
+								x:getWorldXByCol(curSeg),	
+								y:blepco	
+							},
+							b:{
+								x:getWorldXByCol(i),
+								y:blepco
+							}
+						});
+						curSeg = -1;
+					}
+				}
+			}
+		}
+		for (i in 0...widthInTiles-1) {
+			curSeg = -1;
+			blepco = getWorldYByRow(i+1);
+			for (j in 0...heightInTiles) {
+				if (getTStateByColRow(i, j).vision != getTStateByColRow(i+1, j).vision) {
+					if (curSeg < 0)
+						curSeg = j;
+				} else {
+					if (curSeg >= 0) {
+						seggs.push({
+							a:{
+								x:blepco,
+								y:getWorldYByRow(curSeg)	
+							},
+							b:{
+								x:blepco,
+								y:getWorldYByRow(j)
+							}
+						});
+						curSeg = -1;
+					}
+				}
+			}
+		}
+		return seggs;
 	}
 }
 
@@ -275,5 +360,6 @@ typedef PrxTilesetTileMetadata = {
 	void:Bool,
 	spike:Bool,
 	vision:Bool,
+	roofed:Bool,
 	blend:Array<Bool>,
 }

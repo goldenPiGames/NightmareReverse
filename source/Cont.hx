@@ -28,7 +28,6 @@ class Cont {
 	static var loaded:Bool = false;
 	
 	public static function ensureLoaded():Void {
-		//trace("fuck everything");
 		if (!loaded) {
 			loadAndStuff();
 			FlxG.inputs.resetOnStateSwitch = false;
@@ -37,7 +36,6 @@ class Cont {
 	}
 
 	public static function loadAndStuff():Void {
-		//manager = FlxG.inputs.add(new PrxActionManager());
 		manager = new PrxActionManager();
 		manager.resetOnStateSwitch = ResetPolicy.NONE;
 		FlxG.inputs.add(manager);
@@ -148,12 +146,8 @@ class PrxActionManager extends FlxActionManager {
 	var numUpdates:Int = 0;
 	public override function update() {
 		super.update();
-		//trace(numUpdates++);
+		//FlxG.watch.addQuick("cunt", numUpdates++);
 		
-	}
-
-	public override function destroy() {
-		//throw "fuck you";
 	}
 }
 

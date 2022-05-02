@@ -102,10 +102,12 @@ class Dialog extends FlxText {
 	}
 
 	function endDialog() {
+		visible = false;
 		text = "";
 	}
 
 	function setCurrentLine():Void {
+		visible = true;
 		lineCurrent = lines[lineIndex];
 		text = lineCurrent.speaker+": "+lineCurrent.text;
 		color = lineCurrent.color;

@@ -6,8 +6,10 @@
 
 "level_LucidTutorial":"Lucid Tutorial",
 "level_DeepWoods":"Deep Woods",
-"level_test":"Test",
-"level_testsmall":"Test, Small",
+"level_test":"Test: Stuff",
+"level_testsmall":"Test: Small",
+"level_testopen":"Test: Open",
+
 "speaker_aps":"Aps",
 "speaker_amm":"Ammette",
 "speaker_leir":"Leirshuen",
